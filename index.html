@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="SHAM — электроника интернет дүкені">
+<meta name="theme-color" content="#11130f">
+<title>SHAM — интернет дүкені</title>
+<style>
+:root{--bg:#f5ede0;--card:#ffffff;--ink:#1c1917;--mu:#7a6f64;--line:#e6d9c6;--ac:#c9a57d;--acf:#1c1917;--acx:#8a6540;--shadow:0 10px 30px rgba(90,60,30,.10)}
+body.dark{--bg:#1c1917;--card:#292421;--ink:#f5ede0;--mu:#b9ab9a;--line:#3d3530;--ac:#d9b88f;--acf:#1c1917;--acx:#d9b88f;--shadow:0 10px 30px rgba(0,0,0,.45)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.5;transition:background .25s,color .25s}
+button,input,select{font:inherit;color:inherit}
+.topbar{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:16px;padding:12px 24px;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.brand{font:800 26px Georgia,serif;color:var(--ink);text-decoration:none;letter-spacing:1px}.brand span{color:var(--acx)}
+.brand.small{font-size:20px}
+.nav{display:flex;gap:4px;flex:1}
+.nav-btn{border:0;background:transparent;color:var(--mu);padding:9px 16px;border-radius:999px;cursor:pointer;font-weight:600}
+.nav-btn:hover{color:var(--ink)}.nav-btn.active{background:var(--ink);color:var(--bg)}
+.actions{display:flex;gap:8px;align-items:center}
+.btn{border:1px solid var(--ac);background:var(--ac);color:var(--acf);padding:10px 18px;border-radius:999px;font-weight:700;cursor:pointer;transition:.15s}
+.btn:hover{filter:brightness(1.12);transform:translateY(-1px)}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn.big{width:100%;padding:14px;font-size:16px;border-radius:14px;margin-top:8px}
+#cartCount{display:inline-block;min-width:22px;padding:0 6px;margin-left:4px;border-radius:999px;background:#fff;color:#1c1917;text-align:center;font-size:13px}
+.icon-btn{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--card);cursor:pointer;font-size:18px}
+main{max-width:1160px;margin:0 auto;padding:36px 22px 70px}
+.page{display:none}.page.active{display:block;animation:in .35s}
+@keyframes in{from{opacity:0;transform:translateY(10px)}to{opacity:1}}
+.eyebrow,.form-kicker{font-size:12px;letter-spacing:.2em;font-weight:800;color:var(--acx)}
+
+.welcome-brandline{font-size:13px;letter-spacing:.14em;color:var(--mu);margin-top:2px}
+h1{font:700 clamp(38px,7vw,78px)/1.04 Georgia,serif;margin:12px 0 14px}
+h2{font:700 30px Georgia,serif;margin:6px 0 14px}h3{margin:0 0 4px}
+.welcome-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:34px;align-items:center;min-height:62vh}
+@media(max-width:860px){.welcome-grid{grid-template-columns:1fr}}
+.welcome-copy>p{font-size:19px;max-width:520px;margin:6px 0}.welcome-note{font-style:italic;color:var(--mu)}
+.project-credit{display:inline-flex;flex-direction:column;margin-top:22px;padding:14px 20px;border:1px solid var(--line);border-radius:16px;background:var(--card)}
+.project-credit span{font-size:11px;letter-spacing:.16em;color:var(--mu);font-weight:700}.project-credit b{font-size:20px}.project-credit small{color:var(--mu)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:24px;box-shadow:var(--shadow)}
+.form-card label,#checkoutForm label{display:block;font-size:13px;font-weight:700;color:var(--mu);margin:12px 0}
+input,select{width:100%;margin-top:6px;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--bg);outline:none}
+input:focus,select:focus{border-color:var(--acx);box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 25%,transparent)}
+.note{display:block;margin-top:10px;color:var(--mu)}
+.section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px}.section-head p{color:var(--mu);margin:0}
+.count{font:800 52px Georgia,serif;color:var(--acx)}
+.filters{display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px;margin:20px 0}@media(max-width:720px){.filters{grid-template-columns:1fr}}
+.filters input,.filters select{margin:0}
+.products{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px}
+.product-card{background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:var(--shadow);transition:.2s}
+.product-card:hover{transform:translateY(-4px)}
+.product-art{height:170px;background:var(--line);display:grid;place-items:center;overflow:hidden}
+.product-art svg{width:100%;height:100%;display:block}
+.cart-thumb{overflow:hidden}.cart-thumb svg{width:100%;height:100%;display:block}
+.product-art img{width:100%;height:100%;object-fit:cover;display:block}
+.product-art .emoji{font-size:60px;place-items:center}
+.product-info{padding:14px 16px 16px}.product-info h3{font-size:16px}.product-info p{margin:2px 0 12px;color:var(--mu);font-size:14px}
+.product-bottom{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.product-price{font:700 19px Georgia,serif;display:flex;flex-direction:column}.product-price small{font:400 11px system-ui;color:var(--mu);max-width:150px}
+.add-btn{width:40px;height:40px;border-radius:50%;border:0;background:var(--ac);color:var(--acf);font-size:22px;cursor:pointer;flex:none}
+.empty{padding:30px;text-align:center;color:var(--mu)}
+.settings-intro{color:var(--mu)}.settings-card{margin:14px 0;max-width:560px}.settings-card p{color:var(--mu);margin:2px 0 12px}
+.back-link{border:0;background:none;color:var(--mu);cursor:pointer;padding:10px 0;font-weight:600}.back-link:hover{color:var(--ink)}
+.checkout-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:20px;margin-top:20px;align-items:start}@media(max-width:860px){.checkout-grid{grid-template-columns:1fr}}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:560px){.two{grid-template-columns:1fr}}
+.verify{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;margin:8px 0}.verify input{margin:0}@media(max-width:560px){.verify{grid-template-columns:1fr}}
+.msg{min-height:20px;margin:6px 0;color:var(--acx);font-size:14px}
+.summary-line{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px}
+.summary-total{display:flex;justify-content:space-between;align-items:baseline;margin:16px 0 4px;font-size:17px}.summary-total b{font:800 24px Georgia,serif}
+.history-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin:12px 0}.history-card p{margin:4px 0;color:var(--mu);font-size:14px}
+.backdrop{position:fixed;inset:0;background:rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:.25s;z-index:40}.backdrop.show{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:-440px;width:min(420px,100%);height:100%;background:var(--card);border-left:1px solid var(--line);z-index:50;display:flex;flex-direction:column;transition:right .3s;padding:20px}
+.drawer.show{right:0}
+.drawer-head{display:flex;justify-content:space-between;align-items:center}.drawer-head h2{margin:0}
+.drawer-body{flex:1;overflow:auto;margin:14px 0}
+.cart-row{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.cart-row>div:nth-child(2){flex:1}.cart-row small{display:block;color:var(--mu)}
+.cart-thumb{width:52px;height:52px;border-radius:12px;background:var(--bg);display:grid;place-items:center;font-size:26px;flex:none}
+.qty{display:flex;gap:10px;align-items:center;margin-top:6px}.qty button{width:26px;height:26px;border-radius:50%;border:1px solid var(--line);background:transparent;cursor:pointer}
+.remove{background:none;border:0;font-size:22px;color:var(--mu);cursor:pointer}
+footer{display:flex;gap:18px;justify-content:center;align-items:center;flex-wrap:wrap;padding:26px 20px;border-top:1px solid var(--line);color:var(--mu);font-size:14px}
+.link{background:none;border:0;color:var(--acx);cursor:pointer;font-weight:700}
+.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,90px);background:var(--ac);color:var(--acf);padding:12px 22px;border-radius:12px;font-weight:700;z-index:99;transition:.3s}
+.toast.show{transform:translate(-50%,0)}
+@media(max-width:640px){.topbar{padding:10px 14px;gap:8px;flex-wrap:wrap}.nav{order:3;width:100%;flex:none;overflow:auto}main{padding:24px 14px 60px}}
+
+.product-art{position:relative}.product-art .photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a href="#" id="brandHome" class="brand">SHAM<span>.</span></a>
+  <nav class="nav">
+    <button class="nav-btn active" data-page="welcome" id="navHome">Басты бет</button>
+    <button class="nav-btn" data-page="shop" id="navShop">Дүкен</button>
+    <button class="nav-btn" data-page="settings" id="navSettings">Баптаулар</button>
+  </nav>
+  <div class="actions">
+    <button class="icon-btn" id="themeBtn" aria-label="Theme">☾</button>
+    <button class="btn" id="cartOpen">Себет <span id="cartCount">0</span></button>
+  </div>
+</header>
+
+<main>
+  <section class="page active" id="welcome">
+    <div class="welcome-grid">
+      <div class="welcome-copy">
+        <div class="eyebrow">КУРСТЫҚ ЖҰМЫС</div>
+        <div class="welcome-brandline">SHAM • ИНТЕРНЕТ ДҮКЕНІ</div>
+        <h1>Керегіңнің бәрі осында.</h1>
+        <p>SHAM — күнделікті өмірге арналған заманауи электроника дүкені.</p>
+        <p class="welcome-note">Алыс-беріс — береке, барыс-келіс — мереке!</p>
+        <div class="project-credit"><span>ОРЫНДАҒАН АВТОР</span><b>Өтеген Ақжол</b><small>БКЕ 24.31 тобы · 2026 жыл</small></div>
+      </div>
+      <form class="card form-card" id="profileForm">
+        <div class="form-kicker">ҚОШ КЕЛДІҢІЗ</div>
+        <h2>Профиль ашу</h2>
+        <label>Атыңыз<input id="firstName" required placeholder="Мысалы, Ақжол"></label>
+        <label>Тегіңіз<input id="lastName" required placeholder="Тегіңіз"></label>
+        <label>Телефон нөмірі<input id="phone" type="tel" required placeholder="+7 700 000 00 00"></label>
+        <button class="btn big" type="submit">Дүкенге өту <span>→</span></button>
+        <small class="note">Деректер осы браузерде сақталады.</small>
+      </form>
+    </div>
+  </section>
+
+  <section class="page" id="shop">
+    <div class="eyebrow">SHAM STORE</div>
+    <div class="section-head">
+      <div><h1>Тауарлар каталогы</h1><p>Өзіңе керегін ізде де, себетке қос.</p></div>
+      <div class="count" id="productCount">00</div>
+    </div>
+    <div class="filters">
+      <input id="searchInput" type="search" placeholder="Тауарды іздеу...">
+      <select id="category"></select>
+      <select id="sort"></select>
+    </div>
+    <div class="products" id="products"></div>
+  </section>
+
+  <section class="page" id="settings">
+    <div class="eyebrow">ЖЕКЕ БАПТАУЛАР</div>
+    <h1>Баптаулар</h1>
+    <p class="settings-intro">SHAM дүкенінің көрінісі мен тілін өзіңе ыңғайла.</p>
+    <article class="card settings-card"><h3>Тіл / Язык</h3><p>Сайттың тілін таңда.</p>
+      <select id="language"><option value="kk">Қазақша</option><option value="ru">Русский</option></select></article>
+    <article class="card settings-card"><h3>Түстер режимі</h3><p>Жарық немесе қараңғы көрініс.</p>
+      <button class="btn" id="settingsTheme" type="button">Қараңғы режимге ауысу</button></article>
+    <article class="card settings-card"><h3>Профиль деректері</h3><p id="profileSummary">Әзірге профиль толтырылмаған.</p>
+      <button class="btn ghost" id="editProfile" type="button">Өзгерту</button></article>
+    <button class="back-link" data-page="shop" type="button">← Дүкенге қайту</button>
+  </section>
+
+  <section class="page" id="checkout">
+    <button class="back-link" data-page="shop" type="button">← Дүкенге қайту</button>
+    <div class="eyebrow">ТАПСЫРЫСТЫ РӘСІМДЕУ</div>
+    <div class="section-head"><div><h1>Жеткізу мәліметтері</h1><p>Тауарды жеткізу үшін мекенжайыңды толық жаз.</p></div></div>
+    <div class="checkout-grid">
+      <form class="card" id="checkoutForm">
+        <div class="two"><label>Аты<input id="oFirst" required></label><label>Тегі<input id="oLast" required></label></div>
+        <div class="two"><label>Телефон нөмірі<input id="oPhone" type="tel" required></label><label>Gmail / Email<input id="oEmail" type="email" required></label></div>
+        <div class="verify"><button class="btn ghost" type="button" id="sendCode">Email-ге код жіберу</button>
+          <input id="emailCode" placeholder="6 таңбалы код" inputmode="numeric" maxlength="6"><button class="btn" type="button" id="verifyCode">Растау</button></div>
+        <p class="msg" id="verifyMessage"></p>
+        <div class="two"><label>Қала<input id="oCity" required placeholder="Мысалы, Атырау"></label><label>Пошта индексі<input id="oPostcode" required placeholder="Мысалы, 060000"></label></div>
+        <label>Толық мекенжай<input id="oAddress" required placeholder="Көше, үй, пәтер"></label>
+        <p class="msg" id="orderMessage"></p>
+        <button class="btn big" type="submit">Тапсырысты растау →</button>
+      </form>
+      <aside class="card order-summary"><h3>Сіздің себетіңіз</h3><div id="checkoutItems"></div>
+        <div class="summary-total"><span>Барлығы</span><b id="checkoutTotal">0 ₸</b></div></aside>
+    </div>
+  </section>
+
+  <section class="page" id="history">
+    <div class="eyebrow">SHAM</div>
+    <h1>Тапсырыстар тарихы</h1>
+    <div id="orderHistory"></div>
+  </section>
+</main>
+
+<div class="backdrop" id="backdrop"></div>
+<aside class="drawer" id="cartDrawer">
+  <div class="drawer-head"><h2>Себет</h2><button class="icon-btn" id="cartClose" aria-label="Close">×</button></div>
+  <div class="drawer-body" id="cartItems"></div>
+  <div class="drawer-foot">
+    <div class="summary-total"><span>Жалпы сома</span><b id="cartTotal">0 ₸</b></div>
+    <button class="btn big" id="checkoutBtn">Сатып алу →</button>
+  </div>
+</aside>
+
+<footer><div class="brand small">SHAM<span>.</span></div><div>© 2026 SHAM интернет дүкені</div><button class="link" id="historyBtn">Тапсырыстар тарихы</button></footer>
+<div class="toast" id="toast"></div>
+
+<script>
+/* Серверсіз ортада (GitHub Pages, файл, алдын ала қарау) /api/* істемесе, демо-режимге ауысады */
+(()=>{const of=window.fetch.bind(window),codes={};
+const res=(d,ok=true)=>new Response(JSON.stringify(d),{status:ok?200:400,headers:{"Content-Type":"application/json"}});
+function mock(u,o){const b=JSON.parse((o&&o.body)||"{}");
+  if(u.endsWith("send-code")){const c=String(100000+Math.floor(Math.random()*900000));codes[b.email]=c;
+    setTimeout(()=>{const v=document.getElementById("verifyMessage");if(v)v.textContent+=" (Демо-код: "+c+")"},80);try{alert("Демо-режим: растау коды "+c)}catch(e){}return res({ok:1});}
+  if(u.endsWith("verify-code"))return codes[b.email]===b.code?res({ok:1}):res({error:"Код қате."},false);
+  return res({ok:1});}
+window.fetch=async(u,o)=>{if(typeof u==="string"&&u.startsWith("/api/")){try{const r=await of(u,o);if(r.status<404||r.status>405)return r}catch(e){}return mock(u,o)}return of(u,o)}})();
+</script>
+<script>
+/* SHAM: интернетсіз жұмыс істейтін тауар суреттері (SVG). Әр тауар өз түсімен салынады. */
+(function(){
+var norm=function(e){return String(e).replace(/\uFE0F/g,"")},F={};
+function fam(k,s){s.split(" ").forEach(function(e){F[norm(e)]=k})}
+fam("phone","📱 📲");fam("laptop","💻");fam("head","🎧");fam("watch","⌚");fam("cam","📷 📽");fam("tv","📺");fam("spk","🔊");fam("bank","🔋 🔌 💾");
+fam("mouse","🖱");fam("kb","⌨");fam("shirt","👕 👚 👔 🧥 🧶 🧣 🤵 👗");fam("pants","👖 🥋");fam("shorts","🩳 🩱");fam("shoe","👟 🥾 👞 🩴");
+fam("bag","🎒 💼 👛 🧺");fam("glasses","🕶");fam("bulb","💡");fam("torch","🔦");fam("bottle","🥤 🚰 🧴 💧");fam("cup","☕");fam("kettle","🫖");
+fam("pot","🍲 🍳 🍽 🥘");fam("sofa","🛋 🪑 🛏 🛌");fam("book","📓 📔 📚 📄 📁");fam("pencil","✏ 🖊 🖍 📏 📐");
+function hs(s){var h=0;for(var i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return h}
+function body(f,u,h,emoji){
+var m="url(#"+u+"m)",s="url(#"+u+"s)",d="url(#"+u+"d)",g="url(#"+u+"h)",o="";
+switch(f){
+case"phone":return '<rect x="72" y="14" width="56" height="112" rx="11" fill="'+d+'"/><rect x="75" y="17" width="50" height="106" rx="9" fill="'+m+'"/><rect x="90" y="21" width="20" height="6" rx="3" fill="#0b0d12"/><circle cx="100" cy="84" r="16" fill="#fff" opacity=".18"/><rect x="72" y="14" width="56" height="112" rx="11" fill="'+g+'"/>';
+case"laptop":return '<path d="M26 114 L34 106 H166 L174 114 Q100 122 26 114 Z" fill="'+s+'"/><rect x="44" y="26" width="112" height="78" rx="6" fill="'+d+'"/><rect x="49" y="31" width="102" height="68" rx="3" fill="'+m+'"/><circle cx="100" cy="66" r="14" fill="#fff" opacity=".2"/><rect x="44" y="26" width="112" height="78" rx="6" fill="'+g+'"/>';
+case"head":return '<path d="M52 88 C48 20 152 20 148 88" fill="none" stroke="'+d+'" stroke-width="9" stroke-linecap="round"/><rect x="38" y="78" width="26" height="44" rx="12" fill="'+m+'"/><rect x="136" y="78" width="26" height="44" rx="12" fill="'+m+'"/><rect x="58" y="84" width="8" height="32" rx="4" fill="#1b1f2a"/><rect x="134" y="84" width="8" height="32" rx="4" fill="#1b1f2a"/><rect x="38" y="78" width="26" height="44" rx="12" fill="'+g+'"/>';
+case"watch":return '<rect x="84" y="6" width="32" height="138" rx="10" fill="'+d+'"/><rect x="62" y="38" width="76" height="76" rx="20" fill="'+s+'"/><rect x="67" y="43" width="66" height="66" rx="16" fill="#0b0d12"/><rect x="70" y="46" width="60" height="60" rx="13" fill="'+m+'" opacity=".85"/><path d="M100 76 V58 M100 76 L114 84" stroke="#fff" stroke-width="3" stroke-linecap="round"/><rect x="138" y="62" width="5" height="14" rx="2" fill="#8b929d"/>';
+case"cam":return '<rect x="36" y="44" width="128" height="76" rx="9" fill="'+d+'"/><path d="M70 44 L78 32 H112 L120 44 Z" fill="'+d+'"/><circle cx="100" cy="82" r="31" fill="'+s+'"/><circle cx="100" cy="82" r="25" fill="#0b0d12"/><circle cx="100" cy="82" r="17" fill="'+m+'" opacity=".8"/><circle cx="93" cy="75" r="5" fill="#fff" opacity=".6"/><rect x="48" y="52" width="16" height="9" rx="2" fill="#e8ecf1"/><circle cx="148" cy="56" r="4" fill="#e04848"/>';
+case"tv":return '<rect x="24" y="20" width="152" height="94" rx="5" fill="'+d+'"/><rect x="29" y="25" width="142" height="84" rx="2" fill="'+m+'"/><circle cx="130" cy="52" r="18" fill="#fff" opacity=".2"/><path d="M29 109 L110 25 H150 L70 109 Z" fill="#fff" opacity=".08"/><path d="M84 114 H116 L122 126 H78 Z" fill="'+s+'"/>';
+case"spk":return '<rect x="58" y="20" width="84" height="108" rx="18" fill="'+d+'"/><circle cx="100" cy="88" r="25" fill="#0b0d12"/><circle cx="100" cy="88" r="17" fill="'+m+'"/><circle cx="100" cy="88" r="6" fill="#0b0d12"/><circle cx="100" cy="46" r="10" fill="#0b0d12"/><circle cx="100" cy="46" r="5" fill="'+s+'"/><rect x="58" y="20" width="84" height="108" rx="18" fill="'+g+'"/>';
+case"bank":return '<rect x="56" y="26" width="88" height="98" rx="16" fill="'+m+'"/><rect x="66" y="40" width="68" height="34" rx="6" fill="#0b0d12" opacity=".35"/><rect x="72" y="50" width="20" height="14" rx="2" fill="#7cf29a"/><rect x="96" y="50" width="20" height="14" rx="2" fill="#7cf29a" opacity=".5"/><rect x="80" y="104" width="40" height="8" rx="4" fill="#0b0d12" opacity=".5"/><rect x="56" y="26" width="88" height="98" rx="16" fill="'+g+'"/>';
+case"mouse":o='M100 22 C140 22 150 56 148 92 C146 120 126 130 100 130 C74 130 54 120 52 92 C50 56 60 22 100 22 Z';return '<path d="'+o+'" fill="'+d+'"/><path d="M100 24 V68" stroke="#555d6b" stroke-width="2"/><rect x="94" y="42" width="12" height="22" rx="6" fill="'+m+'"/><path d="M52 70 Q100 82 148 70" stroke="#555d6b" stroke-width="1.5" fill="none"/><path d="'+o+'" fill="'+g+'"/>';
+case"kb":o='<rect x="18" y="46" width="164" height="70" rx="9" fill="'+d+'"/>';for(var r=0;r<4;r++)for(var c=0;c<12;c++)o+='<rect x="'+(26+c*13)+'" y="'+(53+r*15)+'" width="11" height="12" rx="2" fill="'+(r===3&&c>2&&c<9?"#e8ecf1":(c%5===0&&r===0?m:"#cfd4dc"))+'"/>';return o;
+case"shirt":return '<path d="M60 30 L84 20 Q100 36 116 20 L140 30 L164 58 L144 72 L136 62 V126 H64 V62 L56 72 L36 58 Z" fill="'+m+'"/><path d="M84 20 Q100 44 116 20 Q100 36 84 20Z" fill="#000" opacity=".3"/><path d="M100 36 V126" stroke="#fff" stroke-opacity=".35" stroke-width="2" stroke-dasharray="3 3"/><path d="M64 62 V126 H136 V62 L100 90 Z" fill="'+g+'" opacity=".6"/>';
+case"pants":return '<path d="M64 20 H136 L142 128 H108 L100 58 L92 128 H58 Z" fill="'+m+'"/><rect x="64" y="20" width="72" height="12" fill="#000" opacity=".25"/><path d="M100 32 V58" stroke="#000" stroke-opacity=".3"/><path d="M64 20 H136 L142 128 H108 L100 58 L92 128 H58 Z" fill="'+g+'"/>';
+case"shorts":return '<path d="M62 34 H138 L146 96 H108 L100 70 L92 96 H54 Z" fill="'+m+'"/><rect x="62" y="34" width="76" height="12" fill="#000" opacity=".25"/><path d="M62 34 H138 L146 96 H108 L100 70 L92 96 H54 Z" fill="'+g+'"/>';
+case"shoe":o='M28 96 L30 70 Q56 68 70 48 L88 40 Q98 62 128 68 Q172 74 178 100 L178 112 H34 Q28 112 28 96 Z';return '<path d="'+o+'" fill="'+m+'"/><path d="M26 108 H180 V120 Q100 126 26 120 Z" fill="#f4f6f8"/><path d="M92 52 L104 58 M100 46 L112 54 M108 52 L120 58" stroke="#fff" stroke-width="3" stroke-linecap="round"/><path d="'+o+'" fill="'+g+'"/>';
+case"bag":return '<path d="M80 40 Q80 14 100 14 Q120 14 120 40" fill="none" stroke="'+d+'" stroke-width="7"/><rect x="54" y="34" width="92" height="94" rx="28" fill="'+m+'"/><rect x="70" y="80" width="60" height="38" rx="10" fill="#000" opacity=".22"/><path d="M70 62 H130" stroke="#fff" stroke-opacity=".6" stroke-width="3" stroke-dasharray="4 3"/><rect x="54" y="34" width="92" height="94" rx="28" fill="'+g+'"/>';
+case"glasses":return '<circle cx="64" cy="82" r="26" fill="'+d+'"/><circle cx="136" cy="82" r="26" fill="'+d+'"/><path d="M90 78 Q100 70 110 78" stroke="#12151c" stroke-width="5" fill="none"/><path d="M38 76 L20 62 M162 76 L180 62" stroke="#12151c" stroke-width="5" stroke-linecap="round"/><ellipse cx="55" cy="72" rx="10" ry="6" fill="#fff" opacity=".35"/><ellipse cx="127" cy="72" rx="10" ry="6" fill="#fff" opacity=".35"/>';
+case"bulb":return '<circle cx="100" cy="64" r="48" fill="#ffe9a0" opacity=".25"/><circle cx="100" cy="64" r="34" fill="#ffe9a0"/><path d="M88 70 L94 54 L100 70 L106 54 L112 70" stroke="#e0a82e" stroke-width="2.5" fill="none"/><rect x="86" y="96" width="28" height="22" rx="4" fill="'+s+'"/><rect x="90" y="118" width="20" height="8" rx="4" fill="'+d+'"/>';
+case"torch":return '<g transform="rotate(-35 100 78)"><rect x="38" y="64" width="90" height="28" rx="8" fill="'+d+'"/><path d="M128 58 L160 50 V106 L128 98 Z" fill="'+s+'"/><ellipse cx="160" cy="78" rx="6" ry="28" fill="#fff4b8"/><rect x="62" y="68" width="22" height="20" rx="4" fill="'+m+'"/></g>';
+case"bottle":o='M84 28 H116 L124 44 V118 Q124 128 114 128 H86 Q76 128 76 118 V44 Z';return '<rect x="82" y="12" width="36" height="16" rx="5" fill="'+d+'"/><path d="'+o+'" fill="'+m+'"/><rect x="82" y="58" width="36" height="40" rx="4" fill="#fff" opacity=".85"/><path d="'+o+'" fill="'+g+'"/>';
+case"cup":return '<path d="M62 52 H134 V96 Q134 124 98 124 Q62 124 62 96 Z" fill="'+m+'"/><path d="M134 62 Q160 62 160 86 Q160 106 132 104" fill="none" stroke="'+m+'" stroke-width="9"/><ellipse cx="98" cy="52" rx="36" ry="8" fill="#3b2316"/><path d="M84 38 Q80 26 88 16 M104 38 Q100 26 108 16" stroke="#aeb6c2" stroke-width="3" fill="none" stroke-linecap="round" opacity=".7"/>';
+case"kettle":return '<path d="M56 62 Q56 40 96 40 Q136 40 136 62 V102 Q136 122 96 122 Q56 122 56 102 Z" fill="'+m+'"/><path d="M136 66 L168 44 L172 52 L140 84" fill="'+m+'"/><path d="M58 70 Q28 70 30 94 Q32 108 58 104" fill="none" stroke="'+d+'" stroke-width="8"/><rect x="82" y="30" width="28" height="12" rx="6" fill="'+d+'"/>';
+case"pot":o='M44 64 V100 Q44 122 100 122 Q156 122 156 100 V64 Q156 78 100 78 Q44 78 44 64 Z';return '<ellipse cx="100" cy="64" rx="56" ry="12" fill="#2b2f38"/><path d="'+o+'" fill="'+s+'"/><rect x="156" y="70" width="28" height="9" rx="4" fill="'+d+'"/><rect x="16" y="70" width="28" height="9" rx="4" fill="'+d+'"/><path d="'+o+'" fill="'+g+'"/>';
+case"sofa":return '<rect x="34" y="40" width="132" height="52" rx="16" fill="'+m+'"/><rect x="22" y="64" width="34" height="52" rx="14" fill="'+m+'"/><rect x="144" y="64" width="34" height="52" rx="14" fill="'+m+'"/><rect x="48" y="76" width="104" height="38" rx="10" fill="'+m+'"/><rect x="48" y="76" width="104" height="38" rx="10" fill="#000" opacity=".12"/><rect x="40" y="116" width="8" height="12" fill="#3a2a1f"/><rect x="152" y="116" width="8" height="12" fill="#3a2a1f"/>';
+case"book":return '<rect x="58" y="18" width="84" height="108" rx="5" fill="'+m+'"/><rect x="58" y="18" width="12" height="108" rx="4" fill="#000" opacity=".28"/><rect x="80" y="36" width="52" height="30" rx="3" fill="#fff" opacity=".9"/><path d="M86 46 H124 M86 54 H116" stroke="#9aa1ad" stroke-width="3" stroke-linecap="round"/><rect x="58" y="18" width="84" height="108" rx="5" fill="'+g+'"/>';
+case"pencil":for(var i=0;i<3;i++)o+='<g transform="rotate('+(-30+i*30)+' 100 76)"><rect x="92" y="14" width="16" height="92" rx="2" fill="hsl('+((h+i*60)%360)+' 70% 55%)"/><path d="M92 106 L108 106 L100 128 Z" fill="#f1d3a8"/><path d="M96 118 L104 118 L100 128 Z" fill="#222"/><rect x="92" y="14" width="16" height="12" fill="#e9a0b0"/></g>';return o;
+default:return '<rect x="50" y="22" width="100" height="100" rx="24" fill="'+m+'" opacity=".2"/><text x="100" y="98" font-size="62" text-anchor="middle">'+emoji+'</text>'}}
+window.artSvg=function(p){var h=hs(p.name)%360,u="a"+p.id,f=F[norm(p.emoji)]||"x";
+if(f==="pencil"||f==="x")h=h;
+return '<svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="'+String(p.name).replace(/"/g,"")+'"><defs><linearGradient id="'+u+'b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="hsl('+h+' 25% 97%)"/><stop offset="1" stop-color="hsl('+h+' 30% 86%)"/></linearGradient><linearGradient id="'+u+'m" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="hsl('+h+' 62% 62%)"/><stop offset="1" stop-color="hsl('+h+' 62% 34%)"/></linearGradient><linearGradient id="'+u+'s" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f4f6f8"/><stop offset=".5" stop-color="#c9ced6"/><stop offset="1" stop-color="#8b929d"/></linearGradient><linearGradient id="'+u+'d" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3a4150"/><stop offset="1" stop-color="#12151c"/></linearGradient><radialGradient id="'+u+'h" cx=".3" cy=".25" r=".9"><stop offset="0" stop-color="#fff" stop-opacity=".38"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs><rect width="200" height="150" fill="url(#'+u+'b)"/><ellipse cx="100" cy="132" rx="62" ry="7" fill="#000" opacity=".16"/>'+body(f,u,h,p.emoji)+'</svg>'}})();
+
+</script>
+<script>
+const SAFE_LS=(()=>{try{localStorage.setItem("__t","1");localStorage.removeItem("__t");return localStorage}catch(e){const m={};return{getItem:k=>k in m?m[k]:null,setItem:(k,v)=>{m[k]=String(v)},removeItem:k=>{delete m[k]}}}})();
+const products=[{id:1,name:"iPhone 16 Pro",category:"electronics",emoji:"📱",image:"https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=700&q=85",price:649000,desc:"256 ГБ • Титан",keywords:"айфон телефон смартфон iphone apple"},
+{id:2,name:"Samsung Galaxy S25",category:"electronics",emoji:"📱",image:"https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=700&q=85",price:489000,desc:"256 ГБ • AMOLED",keywords:"самсунг телефон смартфон samsung"},
+{id:3,name:"MacBook Air M3",category:"electronics",emoji:"💻",image:"https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=700&q=85",price:599000,desc:"13 дюйм • Жеңіл ноутбук",keywords:"макбук ноутбук компьютер"},
+{id:4,name:"ASUS Zenbook 14",category:"electronics",emoji:"💻",image:"https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&w=700&q=85",price:529000,desc:"OLED • Жылдам жұмыс",keywords:"асус ноутбук компьютер"},
+{id:5,name:"iPad Air",category:"electronics",emoji:"📲",image:"https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=700&q=85",price:329000,desc:"Планшет • 128 ГБ",keywords:"планшет ipad"},
+{id:6,name:"Canon EOS камера",category:"electronics",emoji:"📷",image:"https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=700&q=85",price:419000,desc:"Фото және видео",keywords:"камера фотоаппарат canon"},
+{id:7,name:"Samsung теледидары",category:"electronics",emoji:"📺",image:"https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=700&q=85",price:289000,desc:"4K UHD • Smart TV",keywords:"теледидар телевизор tv"},
+{id:8,name:"Ойын ноутбугі",category:"electronics",emoji:"💻",image:"https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&w=700&q=85",price:699000,desc:"Gaming • Қуатты",keywords:"ноутбук ойын компьютер"},
+{id:9,name:"AirPods Pro 2",category:"accessories",emoji:"🎧",image:"https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?auto=format&fit=crop&w=700&q=85",price:119000,desc:"Шуды басу • Сымсыз",keywords:"эйрподс құлаққап наушник"},
+{id:10,name:"Sony WH-1000XM5",category:"accessories",emoji:"🎧",image:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=700&q=85",price:189000,desc:"Сапалы дыбыс • ANC",keywords:"сони құлаққап наушник"},
+{id:11,name:"Apple Watch Series 10",category:"accessories",emoji:"⌚",image:"https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=700&q=85",price:209000,desc:"Спорт • Күнделікті",keywords:"сағат смарт часы apple watch"},
+{id:12,name:"JBL Bluetooth колонка",category:"accessories",emoji:"🔊",image:"https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&w=700&q=85",price:49000,desc:"Портативті • Сымсыз",keywords:"колонка динамик музыка"},
+{id:13,name:"Anker Power Bank",category:"accessories",emoji:"🔋",image:"https://images.unsplash.com/photo-1609592424853-3c5a8f0b3a5d?auto=format&fit=crop&w=700&q=85",price:24900,desc:"20 000 mAh • Қуаттағыш",keywords:"пауэрбанк зарядка аккумулятор"},
+{id:14,name:"USB-C қуаттағыш",category:"accessories",emoji:"🔌",image:"https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&w=700&q=85",price:12900,desc:"65W • Әмбебап",keywords:"зарядка қуаттағыш кабель"},
+{id:15,name:"Сымсыз тінтуір",category:"accessories",emoji:"🖱️",image:"https://images.unsplash.com/photo-1527814050087-3793815479db?auto=format&fit=crop&w=700&q=85",price:8900,desc:"USB қабылдағыш",keywords:"тышқан тінтуір мышка"},
+{id:16,name:"Механикалық пернетақта",category:"accessories",emoji:"⌨️",image:"https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=700&q=85",price:27900,desc:"RGB жарық • Gaming",keywords:"клавиатура пернетақта"},
+{id:17,name:"Телефон қапшығы",category:"accessories",emoji:"📱",image:"https://images.unsplash.com/photo-1601593346740-925612772716?auto=format&fit=crop&w=700&q=85",price:5900,desc:"Соққыдан қорғайды",keywords:"чехол қап телефон"},
+{id:18,name:"Күннен қорғайтын көзілдірік",category:"accessories",emoji:"🕶️",image:"https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=700&q=85",price:15900,desc:"UV400 • Заманауи үлгі",keywords:"көзілдірік очки"},
+{id:19,name:"Ақ базалық футболка",category:"clothing",emoji:"👕",image:"https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=700&q=85",price:7900,desc:"Мақта мата • Unisex",keywords:"футболка киім жейде"},
+{id:20,name:"Күнделікті худи",category:"clothing",emoji:"🧥",image:"https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=700&q=85",price:18900,desc:"Жұмсақ мата • Жылы",keywords:"худи кофта киім"},
+{id:21,name:"Классикалық кроссовка",category:"clothing",emoji:"👟",image:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=700&q=85",price:24900,desc:"Жеңіл табан",keywords:"кроссовки аяқ киім обувь"},
+{id:22,name:"Қалалық рюкзак",category:"clothing",emoji:"🎒",image:"https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=700&q=85",price:16900,desc:"Ноутбукке арналған",keywords:"рюкзак сөмке сумка"},
+{id:23,name:"Қысқы күрте",category:"clothing",emoji:"🧥",image:"https://images.unsplash.com/photo-1544923246-77307dd654cb?auto=format&fit=crop&w=700&q=85",price:45900,desc:"Жылы • Желден қорғайды",keywords:"куртка күрте пальто"},
+{id:24,name:"Спорттық шалбар",category:"clothing",emoji:"👖",image:"https://images.unsplash.com/photo-1552902865-b72c031ac5ea?auto=format&fit=crop&w=700&q=85",price:13900,desc:"Ыңғайлы қимылға",keywords:"шалбар спорттық брюки"},
+{id:25,name:"Үйге арналған плед",category:"home",emoji:"🛋️",image:"https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=700&q=85",price:11900,desc:"Жұмсақ әрі жайлы",keywords:"плед көрпе үй заттары"},
+{id:26,name:"Үстел шамы",category:"home",emoji:"💡",image:"https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=700&q=85",price:14900,desc:"Жұмыс үстеліне",keywords:"шам лампа жарық"},
+{id:27,name:"Асүй блендері",category:"home",emoji:"🥤",image:"https://images.unsplash.com/photo-1570222094114-d054a817e56b?auto=format&fit=crop&w=700&q=85",price:22900,desc:"Асүй көмекшісі",keywords:"блендер асүй кухня"},
+{id:28,name:"Электр шәйнек",category:"home",emoji:"🫖",image:"https://images.unsplash.com/photo-1594213114663-d94db9b171e2?auto=format&fit=crop&w=700&q=85",price:11900,desc:"1.7 л • Автоматты өшу",keywords:"шәйнек чайник"},
+{id:29,name:"Шаңсорғыш",category:"home",emoji:"🧹",image:"https://images.unsplash.com/photo-1558317374-067fb5f30001?auto=format&fit=crop&w=700&q=85",price:54900,desc:"Үй тазалығына",keywords:"шаңсорғыш пылесос"},
+{id:30,name:"Ыдыс-аяқ жинағы",category:"home",emoji:"🍽️",image:"https://images.unsplash.com/photo-1493106641515-6b5631de4bb9?auto=format&fit=crop&w=700&q=85",price:18900,desc:"Күнделікті ас ішуге",keywords:"ыдыс аяқ посуда"},
+{id:31,name:"A5 дәптер жинағы",category:"school",emoji:"📓",image:"https://images.unsplash.com/photo-1531346878377-a5be20888e57?auto=format&fit=crop&w=700&q=85",price:2900,desc:"5 дана • Торкөз",keywords:"дәптер тетрадь мектеп"},
+{id:32,name:"Қаламдар жиынтығы",category:"school",emoji:"🖊️",image:"https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=700&q=85",price:1900,desc:"Көк, қара, қызыл",keywords:"қалам ручка мектеп"},
+{id:33,name:"Түрлі түсті қарындаштар",category:"school",emoji:"✏️",image:"https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=700&q=85",price:2400,desc:"24 түс • Сурет салу",keywords:"қарындаш карандаш сурет"},
+{id:34,name:"Мектеп пеналы",category:"school",emoji:"🖍️",image:"https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?auto=format&fit=crop&w=700&q=85",price:3500,desc:"Ыңғайлы бөлімдері бар",keywords:"пенал қаламсауыт"},
+{id:35,name:"Мектеп сөмкесі",category:"school",emoji:"🎒",image:"https://images.unsplash.com/photo-1503919005314-30d93d07d823?auto=format&fit=crop&w=700&q=85",price:12900,desc:"Жеңіл • Көп бөлімді",keywords:"сөмке портфель рюкзак"},
+{id:36,name:"Геометрия жиынтығы",category:"school",emoji:"📐",image:"https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&w=700&q=85",price:1800,desc:"Сызғыш, үшбұрыш, транспортир",keywords:"сызғыш линейка геометрия"},
+{id:37,name:"Кітап оқу шамы",category:"school",emoji:"🔦",image:"https://images.unsplash.com/photo-1519682337058-a94d519337bc?auto=format&fit=crop&w=700&q=85",price:4900,desc:"Кітап оқуға",keywords:"кітап оқу шам лампа"},
+{id:38,name:"Құрастырғыш ойыншық",category:"other",emoji:"🧩",image:"https://images.unsplash.com/photo-1587654780291-39c9404d746b?auto=format&fit=crop&w=700&q=85",price:9900,desc:"Ойлау мен қиялды дамыту",keywords:"ойыншық конструктор балалар"},
+{id:39,name:"Фитнес төсеніш",category:"other",emoji:"🧘",image:"https://images.unsplash.com/photo-1592432678016-e910b452f9a2?auto=format&fit=crop&w=700&q=85",price:8900,desc:"Спорт және жаттығу",keywords:"спорт йога фитнес"},
+{id:40,name:"Саяхат термосы",category:"other",emoji:"🥤",image:"https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=700&q=85",price:6900,desc:"Ыстық пен суықты сақтайды",keywords:"термос бөтелке су"},
+{id:41,name:"Әмиян",category:"other",emoji:"👛",image:"https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=700&q=85",price:7900,desc:"Ықшам • Күнделікті",keywords:"әмиян кошелек портмоне"},
+{id:42,name:"Қолшатыр",category:"other",emoji:"☂️",image:"https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?auto=format&fit=crop&w=700&q=85",price:5900,desc:"Жиналмалы • Жеңіл",keywords:"қолшатыр зонт"}
+,
+{"id":43,"name":"iPhone 15 Pro","category":"electronics","emoji":"📱","image":"https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=700&q=85","price":499000,"desc":"256 ГБ • Титан","keywords":"айфон iphone apple смартфон телефон"},
+{"id":44,"name":"iPhone 15 Pro Max","category":"electronics","emoji":"📱","image":"https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=700&q=85","price":579000,"desc":"256 ГБ • Үлкен экран","keywords":"айфон iphone apple смартфон телефон макс"},
+{"id":45,"name":"iPhone 15","category":"electronics","emoji":"📱","image":"https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=700&q=85","price":369000,"desc":"128 ГБ • OLED","keywords":"айфон iphone apple смартфон телефон"},
+{"id":46,"name":"iPhone 14 Pro","category":"electronics","emoji":"📱","image":"https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&w=700&q=85","price":399000,"desc":"256 ГБ • Pro камера","keywords":"айфон iphone apple смартфон телефон"},
+{"id":47,"name":"iPhone 14 Pro Max","category":"electronics","emoji":"📱","image":"https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=700&q=85","price":459000,"desc":"256 ГБ • Үлкен экран","keywords":"айфон iphone apple смартфон телефон макс"},
+{"id":48,"name":"iPhone 14","category":"electronics","emoji":"📱","image":"https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=700&q=85","price":299000,"desc":"128 ГБ • Super Retina","keywords":"айфон iphone apple смартфон телефон"},
+{"id":49,"name":"iPhone 13 Pro","category":"electronics","emoji":"📱","image":"https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=700&q=85","price":329000,"desc":"256 ГБ • Pro камера","keywords":"айфон iphone apple смартфон телефон"},
+{"id":50,"name":"iPhone 13 Pro Max","category":"electronics","emoji":"📱","image":"https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&w=700&q=85","price":369000,"desc":"256 ГБ • Үлкен экран","keywords":"айфон iphone apple смартфон телефон макс"},
+{"id":51,"name":"Samsung Galaxy S25 Ultra","category":"electronics","emoji":"📱","image":"https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=700&q=85","price":629000,"desc":"512 ГБ • S Pen","keywords":"самсунг samsung галакси телефон смартфон"},
+{"id":52,"name":"Samsung Galaxy S25+","category":"electronics","emoji":"📱","image":"https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=700&q=85","price":549000,"desc":"256 ГБ • AMOLED","keywords":"самсунг samsung галакси телефон смартфон"},
+{"id":53,"name":"Samsung Galaxy S24 Ultra","category":"electronics","emoji":"📱","image":"https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=700&q=85","price":519000,"desc":"256 ГБ • S Pen","keywords":"самсунг samsung галакси телефон смартфон"},
+{"id":54,"name":"Samsung Galaxy S24 FE","category":"electronics","emoji":"📱","image":"https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&w=700&q=85","price":319000,"desc":"256 ГБ • AMOLED","keywords":"самсунг samsung галакси телефон смартфон"},
+{"id":55,"name":"Samsung Galaxy A56","category":"electronics","emoji":"📱","image":"https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=700&q=85","price":219000,"desc":"256 ГБ • Super AMOLED","keywords":"самсунг samsung галакси телефон смартфон"},
+{"id":56,"name":"Samsung Galaxy A36","category":"electronics","emoji":"📱","image":"https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=700&q=85","price":169000,"desc":"128 ГБ • AMOLED","keywords":"самсунг samsung галакси телефон смартфон"},
+{"id":57,"name":"Samsung Galaxy Z Flip6","category":"electronics","emoji":"📱","image":"https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=700&q=85","price":469000,"desc":"256 ГБ • Жиналмалы","keywords":"самсунг samsung галакси телефон смартфон"},
+{"id":58,"name":"MacBook Pro 14 M4","category":"electronics","emoji":"💻","image":"https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&w=700&q=85","price":899000,"desc":"14 дюйм • M4","keywords":"макбук ноутбук apple компьютер"},
+{"id":59,"name":"MacBook Air 15 M3","category":"electronics","emoji":"💻","image":"https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=700&q=85","price":699000,"desc":"15 дюйм • M3","keywords":"макбук ноутбук apple компьютер"},
+{"id":60,"name":"MacBook Air M2","category":"electronics","emoji":"💻","image":"https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=700&q=85","price":499000,"desc":"13 дюйм • M2","keywords":"макбук ноутбук apple компьютер"},
+{"id":61,"name":"MacBook Pro 16 M3 Pro","category":"electronics","emoji":"💻","image":"https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=700&q=85","price":1199000,"desc":"16 дюйм • M3 Pro","keywords":"макбук ноутбук apple компьютер"},
+{"id":62,"name":"ASUS VivoBook 15","category":"electronics","emoji":"💻","image":"https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&w=700&q=85","price":289000,"desc":"15.6 дюйм • Full HD","keywords":"асус ноутбук компьютер"},
+{"id":63,"name":"ASUS TUF Gaming A15","category":"electronics","emoji":"💻","image":"https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=700&q=85","price":459000,"desc":"Gaming • RTX графика","keywords":"асус ноутбук ойын компьютер"},
+{"id":64,"name":"Lenovo IdeaPad Slim 3","category":"electronics","emoji":"💻","image":"https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=700&q=85","price":259000,"desc":"15.6 дюйм • Жеңіл","keywords":"леново ноутбук компьютер"},
+{"id":65,"name":"Lenovo Legion 5","category":"electronics","emoji":"💻","image":"https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=700&q=85","price":629000,"desc":"Gaming • RTX графика","keywords":"леново ноутбук ойын компьютер"},
+{"id":66,"name":"HP Pavilion 15","category":"electronics","emoji":"💻","image":"https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&w=700&q=85","price":319000,"desc":"15.6 дюйм • Full HD","keywords":"hp хп ноутбук компьютер"},
+{"id":67,"name":"HP Victus 16","category":"electronics","emoji":"💻","image":"https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=700&q=85","price":499000,"desc":"Gaming • 16 дюйм","keywords":"hp хп ноутбук ойын компьютер"},
+{"id":68,"name":"Dell Inspiron 14","category":"electronics","emoji":"💻","image":"https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=700&q=85","price":349000,"desc":"14 дюйм • Кеңсе жұмысы","keywords":"делл dell ноутбук компьютер"},
+{"id":69,"name":"Acer Aspire 5","category":"electronics","emoji":"💻","image":"https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=700&q=85","price":279000,"desc":"15.6 дюйм • SSD","keywords":"эйсер acer ноутбук компьютер"},
+{"id":70,"name":"Acer Nitro V 15","category":"electronics","emoji":"💻","image":"https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&w=700&q=85","price":469000,"desc":"Gaming • RTX графика","keywords":"эйсер acer ноутбук ойын компьютер"},
+{"id":71,"name":"Huawei MateBook D16","category":"electronics","emoji":"💻","image":"https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=700&q=85","price":379000,"desc":"16 дюйм • Жұқа корпус","keywords":"хуавей ноутбук компьютер"},
+{"id":72,"name":"MSI Thin 15","category":"electronics","emoji":"💻","image":"https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=700&q=85","price":519000,"desc":"Gaming • 15.6 дюйм","keywords":"мси ноутбук ойын компьютер"},
+{"id":73,"name":"iPad Pro 11","category":"electronics","emoji":"📲","image":"https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=700&q=85","price":499000,"desc":"256 ГБ • Планшет","keywords":"айпад ipad планшет apple"},
+{"id":74,"name":"iPad 10","category":"electronics","emoji":"📲","image":"https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&w=700&q=85","price":219000,"desc":"64 ГБ • Планшет","keywords":"айпад ipad планшет apple"},
+{"id":75,"name":"Samsung Galaxy Tab S9","category":"electronics","emoji":"📲","image":"https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=700&q=85","price":299000,"desc":"128 ГБ • Планшет","keywords":"самсунг планшет samsung tablet"},
+{"id":76,"name":"Xiaomi Pad 6","category":"electronics","emoji":"📲","image":"https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=700&q=85","price":179000,"desc":"256 ГБ • Планшет","keywords":"сяоми xiaomi планшет"},
+{"id":77,"name":"PlayStation 5 Slim","category":"electronics","emoji":"🎮","image":"https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=700&q=85","price":299000,"desc":"Ойын консолі","keywords":"плейстейшен приставка ойын консоль"},
+{"id":78,"name":"Xbox Series S","category":"electronics","emoji":"🎮","image":"https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&w=700&q=85","price":189000,"desc":"Ойын консолі","keywords":"иксбокс xbox приставка ойын"},
+{"id":79,"name":"Nintendo Switch OLED","category":"electronics","emoji":"🎮","image":"https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=700&q=85","price":179000,"desc":"Портативті консоль","keywords":"нинтендо ойын приставка"},
+{"id":80,"name":"Canon EOS R50","category":"electronics","emoji":"📷","image":"https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=700&q=85","price":399000,"desc":"Фотоаппарат • 4K видео","keywords":"canon камера фотоаппарат"},
+{"id":81,"name":"GoPro HERO12","category":"electronics","emoji":"📷","image":"https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=700&q=85","price":219000,"desc":"Экшн-камера • 5.3K","keywords":"камера gopro экшн видео"},
+{"id":82,"name":"Xiaomi 4K Smart TV 55","category":"electronics","emoji":"📺","image":"https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&w=700&q=85","price":259000,"desc":"55 дюйм • Smart TV","keywords":"теледидар телевизор tv сяоми"},
+{"id":83,"name":"LG OLED TV 48","category":"electronics","emoji":"📺","image":"https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=700&q=85","price":599000,"desc":"48 дюйм • OLED","keywords":"теледидар телевизор lg"},
+{"id":84,"name":"Проектор Full HD","category":"electronics","emoji":"📽️","image":"https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=700&q=85","price":89900,"desc":"Үй кинотеатры","keywords":"проектор кино проектор"},
+{"id":85,"name":"Apple Watch Ultra 2","category":"accessories","emoji":"⌚","image":"https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?auto=format&fit=crop&w=700&q=85","price":389000,"desc":"49 мм • Титан","keywords":"apple watch эпл вотч сағат часы"},
+{"id":86,"name":"Apple Watch Series 9","category":"accessories","emoji":"⌚","image":"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=700&q=85","price":169000,"desc":"45 мм • GPS","keywords":"apple watch эпл вотч сағат часы"},
+{"id":87,"name":"Apple Watch SE 2","category":"accessories","emoji":"⌚","image":"https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=700&q=85","price":119000,"desc":"44 мм • Спорт","keywords":"apple watch эпл вотч сағат часы"},
+{"id":88,"name":"Apple Watch Series 8","category":"accessories","emoji":"⌚","image":"https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&w=700&q=85","price":139000,"desc":"45 мм • Retina","keywords":"apple watch эпл вотч сағат часы"},
+{"id":89,"name":"Apple Watch Series 7","category":"accessories","emoji":"⌚","image":"https://images.unsplash.com/photo-1609592424853-3c5a8f0b3a5d?auto=format&fit=crop&w=700&q=85","price":109000,"desc":"45 мм • Always-On","keywords":"apple watch эпл вотч сағат часы"},
+{"id":90,"name":"Apple Watch Series 6","category":"accessories","emoji":"⌚","image":"https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&w=700&q=85","price":89000,"desc":"44 мм • GPS","keywords":"apple watch эпл вотч сағат часы"},
+{"id":91,"name":"Samsung Galaxy Watch 7","category":"accessories","emoji":"⌚","image":"https://images.unsplash.com/photo-1527814050087-3793815479db?auto=format&fit=crop&w=700&q=85","price":149000,"desc":"44 мм • Smart Watch","keywords":"самсунг сағат samsung watch часы"},
+{"id":92,"name":"Samsung Galaxy Watch Ultra","category":"accessories","emoji":"⌚","image":"https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=700&q=85","price":269000,"desc":"Титан • Спорт","keywords":"самсунг сағат samsung watch часы"},
+{"id":93,"name":"Huawei Watch GT 5","category":"accessories","emoji":"⌚","image":"https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?auto=format&fit=crop&w=700&q=85","price":119000,"desc":"46 мм • Ұзақ қуат","keywords":"хуавей сағат watch часы"},
+{"id":94,"name":"Xiaomi Smart Band 9","category":"accessories","emoji":"⌚","image":"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=700&q=85","price":24900,"desc":"Фитнес білезік","keywords":"сяоми сағат браслет фитнес"},
+{"id":95,"name":"AirPods 4","category":"accessories","emoji":"🎧","image":"https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=700&q=85","price":89900,"desc":"Сымсыз • Кеңістіктік дыбыс","keywords":"airpods эйрподс құлаққап наушник"},
+{"id":96,"name":"AirPods 3","category":"accessories","emoji":"🎧","image":"https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&w=700&q=85","price":69900,"desc":"Сымсыз құлаққап","keywords":"airpods эйрподс құлаққап наушник"},
+{"id":97,"name":"Samsung Galaxy Buds3 Pro","category":"accessories","emoji":"🎧","image":"https://images.unsplash.com/photo-1609592424853-3c5a8f0b3a5d?auto=format&fit=crop&w=700&q=85","price":99900,"desc":"Шуды басу • ANC","keywords":"самсунг buds құлаққап наушник"},
+{"id":98,"name":"Samsung Galaxy Buds FE","category":"accessories","emoji":"🎧","image":"https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&w=700&q=85","price":39900,"desc":"Сымсыз • Ыңғайлы","keywords":"самсунг buds құлаққап наушник"},
+{"id":99,"name":"Xiaomi Redmi Buds 5 Pro","category":"accessories","emoji":"🎧","image":"https://images.unsplash.com/photo-1527814050087-3793815479db?auto=format&fit=crop&w=700&q=85","price":29900,"desc":"ANC • Сымсыз","keywords":"сяоми құлаққап наушник"},
+{"id":100,"name":"Huawei FreeBuds 6i","category":"accessories","emoji":"🎧","image":"https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=700&q=85","price":39900,"desc":"Шуды басу • ANC","keywords":"хуавей құлаққап наушник"},
+{"id":101,"name":"Nothing Ear (a)","category":"accessories","emoji":"🎧","image":"https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?auto=format&fit=crop&w=700&q=85","price":54900,"desc":"Мөлдір дизайн • ANC","keywords":"nothing құлаққап наушник"},
+{"id":102,"name":"JBL Tune 230NC","category":"accessories","emoji":"🎧","image":"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=700&q=85","price":34900,"desc":"Сымсыз • ANC","keywords":"jbl құлаққап наушник"},
+{"id":103,"name":"Beats Studio Buds+","category":"accessories","emoji":"🎧","image":"https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=700&q=85","price":79900,"desc":"Сымсыз • ANC","keywords":"beats құлаққап наушник"},
+{"id":104,"name":"Bose QuietComfort Ultra","category":"accessories","emoji":"🎧","image":"https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&w=700&q=85","price":229000,"desc":"Премиум • ANC","keywords":"bose үлкен құлаққап наушник"},
+{"id":105,"name":"Sennheiser Momentum 4","category":"accessories","emoji":"🎧","image":"https://images.unsplash.com/photo-1609592424853-3c5a8f0b3a5d?auto=format&fit=crop&w=700&q=85","price":199000,"desc":"Hi-Fi • ANC","keywords":"sennheiser үлкен құлаққап наушник"},
+{"id":106,"name":"JBL Live 770NC","category":"accessories","emoji":"🎧","image":"https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&w=700&q=85","price":79900,"desc":"Үлкен құлаққап • ANC","keywords":"jbl үлкен құлаққап наушник"},
+{"id":107,"name":"JBL Tune 720BT","category":"accessories","emoji":"🎧","image":"https://images.unsplash.com/photo-1527814050087-3793815479db?auto=format&fit=crop&w=700&q=85","price":39900,"desc":"Үлкен құлаққап • Bluetooth","keywords":"jbl үлкен құлаққап наушник"},
+{"id":108,"name":"Sony WH-CH720N","category":"accessories","emoji":"🎧","image":"https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=700&q=85","price":79900,"desc":"Үлкен құлаққап • ANC","keywords":"sony үлкен құлаққап наушник"},
+{"id":109,"name":"Sony WH-XB910N","category":"accessories","emoji":"🎧","image":"https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?auto=format&fit=crop&w=700&q=85","price":119000,"desc":"Extra Bass • ANC","keywords":"sony үлкен құлаққап наушник"},
+{"id":110,"name":"Anker Soundcore Q45","category":"accessories","emoji":"🎧","image":"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=700&q=85","price":69900,"desc":"Үлкен құлаққап • ANC","keywords":"anker үлкен құлаққап наушник"},
+{"id":111,"name":"Beats Solo 4","category":"accessories","emoji":"🎧","image":"https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=700&q=85","price":99900,"desc":"Үлкен құлаққап • Сымсыз","keywords":"beats үлкен құлаққап наушник"},
+{"id":112,"name":"Marshall Major V","category":"accessories","emoji":"🎧","image":"https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&w=700&q=85","price":89900,"desc":"Үлкен құлаққап • Ретро","keywords":"marshall үлкен құлаққап наушник"},
+{"id":113,"name":"Logitech MX Master 3S","category":"accessories","emoji":"🖱️","image":"https://images.unsplash.com/photo-1527814050087-3793815479db?auto=format&fit=crop&w=700&q=85","price":59900,"desc":"Кәсіби сымсыз тінтуір","keywords":"logitech тышқан тінтуір мышка компьютер"},
+{"id":114,"name":"Razer DeathAdder V3","category":"accessories","emoji":"🖱️","image":"https://images.unsplash.com/photo-1527814050087-3793815479db?auto=format&fit=crop&w=700&q=85","price":39900,"desc":"Gaming • Жылдам сенсор","keywords":"razer ойын тышқан тінтуір мышка"},
+{"id":115,"name":"SanDisk microSD 256GB","category":"accessories","emoji":"💾","image":"https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=700&q=85","price":14900,"desc":"Жад картасы • 256 ГБ","keywords":"sandisk карта жады memory sd"},
+{"id":116,"name":"UGREEN USB-C кабелі","category":"accessories","emoji":"🔌","image":"https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=700&q=85","price":3900,"desc":"1 метр • Жылдам қуаттау","keywords":"кабель сым зарядка"},
+{"id":117,"name":"Apple MagSafe қуаттағыш","category":"accessories","emoji":"🔋","image":"https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?auto=format&fit=crop&w=700&q=85","price":19900,"desc":"Сымсыз қуаттау","keywords":"magsafe зарядка apple"},
+{"id":118,"name":"Anker 30W адаптері","category":"accessories","emoji":"🔌","image":"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=700&q=85","price":14900,"desc":"USB-C • 30W","keywords":"адаптер зарядка қуаттағыш"},
+{"id":119,"name":"Samsung 45W адаптері","category":"accessories","emoji":"🔌","image":"https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=700&q=85","price":17900,"desc":"Super Fast Charging","keywords":"самсунг зарядка адаптер"},
+{"id":120,"name":"Baseus автокөлік ұстағышы","category":"accessories","emoji":"📱","image":"https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&w=700&q=85","price":8900,"desc":"Телефонға арналған","keywords":"ұстағыш держатель телефон"},
+{"id":121,"name":"Телефон штативі","category":"accessories","emoji":"📷","image":"https://images.unsplash.com/photo-1609592424853-3c5a8f0b3a5d?auto=format&fit=crop&w=700&q=85","price":12900,"desc":"Үш аяқты • Реттеледі","keywords":"штатив tripod телефон"},
+{"id":122,"name":"USB флеш-жинақтағыш 128GB","category":"accessories","emoji":"💾","image":"https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&w=700&q=85","price":6900,"desc":"USB 3.0","keywords":"флешка usb жады"},
+{"id":123,"name":"SanDisk SSD 1TB","category":"accessories","emoji":"💾","image":"https://images.unsplash.com/photo-1527814050087-3793815479db?auto=format&fit=crop&w=700&q=85","price":49900,"desc":"Сыртқы SSD","keywords":"ssd диск жады"},
+{"id":124,"name":"Ноутбукке арналған сөмке","category":"accessories","emoji":"💼","image":"https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=700&q=85","price":14900,"desc":"15.6 дюйм","keywords":"сөмке ноутбук чехол"},
+{"id":125,"name":"Қара классикалық футболка","category":"clothing","emoji":"👕","image":"https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=700&q=85","price":8900,"desc":"Мақта • Unisex","keywords":"футболка киім жейде"},
+{"id":126,"name":"Oversize футболка","category":"clothing","emoji":"👕","image":"https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=700&q=85","price":10900,"desc":"Кең пішім","keywords":"футболка oversize киім"},
+{"id":127,"name":"Ақ поло жейде","category":"clothing","emoji":"👕","image":"https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=700&q=85","price":12900,"desc":"Күнделікті стиль","keywords":"поло жейде киім"},
+{"id":128,"name":"Классикалық жейде","category":"clothing","emoji":"👔","image":"https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=700&q=85","price":16900,"desc":"Ұзын жең","keywords":"жейде рубашка киім"},
+{"id":129,"name":"Джинсы шалбар","category":"clothing","emoji":"👖","image":"https://images.unsplash.com/photo-1544923246-77307dd654cb?auto=format&fit=crop&w=700&q=85","price":22900,"desc":"Straight fit","keywords":"джинсы шалбар джинсы"},
+{"id":130,"name":"Классикалық шалбар","category":"clothing","emoji":"👖","image":"https://images.unsplash.com/photo-1552902865-b72c031ac5ea?auto=format&fit=crop&w=700&q=85","price":19900,"desc":"Кеңсе стилі","keywords":"шалбар брюки киім"},
+{"id":131,"name":"Карго шалбар","category":"clothing","emoji":"👖","image":"https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=700&q=85","price":21900,"desc":"Көп қалталы","keywords":"карго шалбар киім"},
+{"id":132,"name":"Джинсы шорты","category":"clothing","emoji":"🩳","image":"https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=700&q=85","price":13900,"desc":"Жазғы үлгі","keywords":"шорты шолақ шалбар"},
+{"id":133,"name":"Спорттық шорты","category":"clothing","emoji":"🩳","image":"https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=700&q=85","price":9900,"desc":"Жеңіл мата","keywords":"шорты спорт киім"},
+{"id":134,"name":"Капюшонды свитшот","category":"clothing","emoji":"🧥","image":"https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=700&q=85","price":17900,"desc":"Жұмсақ мақта","keywords":"свитшот кофта киім"},
+{"id":135,"name":"Тоқылған жемпір","category":"clothing","emoji":"🧶","image":"https://images.unsplash.com/photo-1544923246-77307dd654cb?auto=format&fit=crop&w=700&q=85","price":19900,"desc":"Жылы • Күнделікті","keywords":"жемпір свитер киім"},
+{"id":136,"name":"Кардиган","category":"clothing","emoji":"🧥","image":"https://images.unsplash.com/photo-1552902865-b72c031ac5ea?auto=format&fit=crop&w=700&q=85","price":22900,"desc":"Жұмсақ тоқыма","keywords":"кардиган кофта киім"},
+{"id":137,"name":"Көктемгі күрте","category":"clothing","emoji":"🧥","image":"https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=700&q=85","price":32900,"desc":"Жеңіл • Желден қорғайды","keywords":"күрте куртка киім"},
+{"id":138,"name":"Пуховик","category":"clothing","emoji":"🧥","image":"https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=700&q=85","price":59900,"desc":"Қысқы жылы күрте","keywords":"пуховик куртка күрте"},
+{"id":139,"name":"Жаңбырлық","category":"clothing","emoji":"🧥","image":"https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=700&q=85","price":24900,"desc":"Су өткізбейді","keywords":"жаңбырлық плащ киім"},
+{"id":140,"name":"Классикалық пальто","category":"clothing","emoji":"🧥","image":"https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=700&q=85","price":69900,"desc":"Ұзын үлгі","keywords":"пальто киім"},
+{"id":141,"name":"Костюм жинағы","category":"clothing","emoji":"🤵","image":"https://images.unsplash.com/photo-1544923246-77307dd654cb?auto=format&fit=crop&w=700&q=85","price":79900,"desc":"Пиджак • Шалбар","keywords":"костюм пиджак киім"},
+{"id":142,"name":"Спорттық костюм","category":"clothing","emoji":"🏃","image":"https://images.unsplash.com/photo-1552902865-b72c031ac5ea?auto=format&fit=crop&w=700&q=85","price":29900,"desc":"Екі бөлікті","keywords":"спорт костюм киім"},
+{"id":143,"name":"Әйелдер көйлегі","category":"clothing","emoji":"👗","image":"https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=700&q=85","price":24900,"desc":"Күнделікті үлгі","keywords":"көйлек платье киім"},
+{"id":144,"name":"Жазғы сарафан","category":"clothing","emoji":"👗","image":"https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=700&q=85","price":19900,"desc":"Жеңіл мата","keywords":"сарафан көйлек киім"},
+{"id":145,"name":"Қара юбка","category":"clothing","emoji":"👗","image":"https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=700&q=85","price":14900,"desc":"Классикалық","keywords":"юбка белдемше киім"},
+{"id":146,"name":"Леггинс","category":"clothing","emoji":"🩱","image":"https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=700&q=85","price":10900,"desc":"Созылмалы мата","keywords":"леггинс киім спорт"},
+{"id":147,"name":"Худи zip-up","category":"clothing","emoji":"🧥","image":"https://images.unsplash.com/photo-1544923246-77307dd654cb?auto=format&fit=crop&w=700&q=85","price":22900,"desc":"Сыдырмалы","keywords":"худи кофта киім"},
+{"id":148,"name":"Кроссовка ақ түсті","category":"clothing","emoji":"👟","image":"https://images.unsplash.com/photo-1552902865-b72c031ac5ea?auto=format&fit=crop&w=700&q=85","price":29900,"desc":"Күнделікті аяқ киім","keywords":"кроссовка аяқ киім обувь"},
+{"id":149,"name":"Nike Air үлгісіндегі кроссовка","category":"clothing","emoji":"👟","image":"https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=700&q=85","price":44900,"desc":"Спорттық стиль","keywords":"кроссовка аяқ киім"},
+{"id":150,"name":"Жүгіруге арналған аяқ киім","category":"clothing","emoji":"👟","image":"https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=700&q=85","price":35900,"desc":"Жеңіл табан","keywords":"жүгіру аяқ киім кроссовки"},
+{"id":151,"name":"Классикалық туфли","category":"clothing","emoji":"👞","image":"https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=700&q=85","price":29900,"desc":"Ресми стиль","keywords":"туфли аяқ киім обувь"},
+{"id":152,"name":"Былғары етік","category":"clothing","emoji":"🥾","image":"https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=700&q=85","price":39900,"desc":"Күзгі үлгі","keywords":"етік аяқ киім обувь"},
+{"id":153,"name":"Қысқы етік","category":"clothing","emoji":"🥾","image":"https://images.unsplash.com/photo-1544923246-77307dd654cb?auto=format&fit=crop&w=700&q=85","price":49900,"desc":"Жылы астар","keywords":"қысқы етік аяқ киім"},
+{"id":154,"name":"Сандал","category":"clothing","emoji":"🩴","image":"https://images.unsplash.com/photo-1552902865-b72c031ac5ea?auto=format&fit=crop&w=700&q=85","price":14900,"desc":"Жазғы аяқ киім","keywords":"сандал аяқ киім"},
+{"id":155,"name":"Тәпішке","category":"clothing","emoji":"🩴","image":"https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=700&q=85","price":6900,"desc":"Үйге арналған","keywords":"тәпішке тапочки аяқ киім"},
+{"id":156,"name":"Кепка","category":"clothing","emoji":"🧢","image":"https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=700&q=85","price":7900,"desc":"Реттелетін өлшем","keywords":"кепка бас киім бейсболка"},
+{"id":157,"name":"Қысқы бас киім","category":"clothing","emoji":"🧢","image":"https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=700&q=85","price":6900,"desc":"Тоқылған","keywords":"бас киім шапка"},
+{"id":158,"name":"Шарф","category":"clothing","emoji":"🧣","image":"https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=700&q=85","price":8900,"desc":"Жұмсақ мата","keywords":"шарф мойынорағыш"},
+{"id":159,"name":"Қолғап","category":"clothing","emoji":"🧤","image":"https://images.unsplash.com/photo-1544923246-77307dd654cb?auto=format&fit=crop&w=700&q=85","price":7900,"desc":"Қысқы аксессуар","keywords":"қолғап перчатки"},
+{"id":160,"name":"Белдік","category":"clothing","emoji":"👔","image":"https://images.unsplash.com/photo-1552902865-b72c031ac5ea?auto=format&fit=crop&w=700&q=85","price":9900,"desc":"Классикалық","keywords":"белдік ремень"},
+{"id":161,"name":"Шұлықтар жинағы","category":"clothing","emoji":"🧦","image":"https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=700&q=85","price":4900,"desc":"5 жұп","keywords":"шұлық носки"},
+{"id":162,"name":"Спорттық шұлық","category":"clothing","emoji":"🧦","image":"https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=700&q=85","price":2900,"desc":"Мақта • 1 жұп","keywords":"шұлық носки"},
+{"id":163,"name":"Пижама жинағы","category":"clothing","emoji":"🛌","image":"https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=700&q=85","price":16900,"desc":"Үй киімі","keywords":"пижама үй киімі"},
+{"id":164,"name":"Халат","category":"clothing","emoji":"🥋","image":"https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=700&q=85","price":18900,"desc":"Жұмсақ • Үйге","keywords":"халат үй киімі"},
+{"id":165,"name":"Спорттық леггинс","category":"clothing","emoji":"🩱","image":"https://images.unsplash.com/photo-1544923246-77307dd654cb?auto=format&fit=crop&w=700&q=85","price":13900,"desc":"Фитнеске арналған","keywords":"леггинс спорт киім"},
+{"id":166,"name":"Йогаға арналған топ","category":"clothing","emoji":"👚","image":"https://images.unsplash.com/photo-1552902865-b72c031ac5ea?auto=format&fit=crop&w=700&q=85","price":9900,"desc":"Созылмалы мата","keywords":"топ спорт киім"},
+{"id":167,"name":"Балаларға арналған футболка","category":"clothing","emoji":"👕","image":"https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=700&q=85","price":5900,"desc":"Мақта • Балалар","keywords":"балалар футболка киім"},
+{"id":168,"name":"Балалар кроссовкасы","category":"clothing","emoji":"👟","image":"https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=700&q=85","price":16900,"desc":"Жеңіл аяқ киім","keywords":"балалар аяқ киім кроссовка"},
+{"id":169,"name":"Микротолқынды пеш","category":"home","emoji":"🍲","image":"https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=700&q=85","price":59900,"desc":"20 л • Жылдам қыздыру","keywords":"микротолқынды пеш микроволновка"},
+{"id":170,"name":"Кір жуғыш машина","category":"home","emoji":"🧺","image":"https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=700&q=85","price":189000,"desc":"7 кг • Автоматты","keywords":"кір жуғыш машина стиральная"},
+{"id":171,"name":"Тоңазытқыш","category":"home","emoji":"🧊","image":"https://images.unsplash.com/photo-1570222094114-d054a817e56b?auto=format&fit=crop&w=700&q=85","price":229000,"desc":"Екі камералы","keywords":"тоңазытқыш холодильник"},
+{"id":172,"name":"Ыдыс жуғыш машина","category":"home","emoji":"🍽️","image":"https://images.unsplash.com/photo-1594213114663-d94db9b171e2?auto=format&fit=crop&w=700&q=85","price":199000,"desc":"12 орындық","keywords":"ыдыс жуғыш посудомойка"},
+{"id":173,"name":"Ауа ылғалдандырғыш","category":"home","emoji":"💧","image":"https://images.unsplash.com/photo-1558317374-067fb5f30001?auto=format&fit=crop&w=700&q=85","price":24900,"desc":"Үйге арналған","keywords":"ылғалдандырғыш увлажнитель"},
+{"id":174,"name":"Ауа тазартқыш","category":"home","emoji":"🌬️","image":"https://images.unsplash.com/photo-1493106641515-6b5631de4bb9?auto=format&fit=crop&w=700&q=85","price":69900,"desc":"HEPA сүзгісі","keywords":"ауа тазартқыш очиститель"},
+{"id":175,"name":"Желдеткіш","category":"home","emoji":"🌀","image":"https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=700&q=85","price":19900,"desc":"3 жылдамдық","keywords":"желдеткіш вентилятор"},
+{"id":176,"name":"Жылытқыш","category":"home","emoji":"🔥","image":"https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=700&q=85","price":22900,"desc":"Электр • Қауіпсіздік","keywords":"жылытқыш обогреватель"},
+{"id":177,"name":"Үтік","category":"home","emoji":"👔","image":"https://images.unsplash.com/photo-1570222094114-d054a817e56b?auto=format&fit=crop&w=700&q=85","price":15900,"desc":"Бу функциясы","keywords":"үтік утюг"},
+{"id":178,"name":"Киім булағыш","category":"home","emoji":"♨️","image":"https://images.unsplash.com/photo-1594213114663-d94db9b171e2?auto=format&fit=crop&w=700&q=85","price":24900,"desc":"Қолға арналған","keywords":"булағыш отпариватель"},
+{"id":179,"name":"Тостер","category":"home","emoji":"🍞","image":"https://images.unsplash.com/photo-1558317374-067fb5f30001?auto=format&fit=crop&w=700&q=85","price":14900,"desc":"2 тілім нан","keywords":"тостер асүй"},
+{"id":180,"name":"Кофеқайнатқыш","category":"home","emoji":"☕","image":"https://images.unsplash.com/photo-1493106641515-6b5631de4bb9?auto=format&fit=crop&w=700&q=85","price":39900,"desc":"Таңғы кофеге","keywords":"кофеқайнатқыш кофеварка"},
+{"id":181,"name":"Кофе ұнтақтағыш","category":"home","emoji":"☕","image":"https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=700&q=85","price":11900,"desc":"Электр • Ықшам","keywords":"кофе ұнтақтағыш"},
+{"id":182,"name":"Мультипісіргіш","category":"home","emoji":"🍚","image":"https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=700&q=85","price":32900,"desc":"5 л • Автоматты","keywords":"мультиварка асүй"},
+{"id":183,"name":"Электр пеш","category":"home","emoji":"🍳","image":"https://images.unsplash.com/photo-1570222094114-d054a817e56b?auto=format&fit=crop&w=700&q=85","price":49900,"desc":"Үстел үсті","keywords":"электр пеш духовка"},
+{"id":184,"name":"Асүй таразысы","category":"home","emoji":"⚖️","image":"https://images.unsplash.com/photo-1594213114663-d94db9b171e2?auto=format&fit=crop&w=700&q=85","price":6900,"desc":"5 кг дейін","keywords":"таразы весы асүй"},
+{"id":185,"name":"Су сүзгісі","category":"home","emoji":"🚰","image":"https://images.unsplash.com/photo-1558317374-067fb5f30001?auto=format&fit=crop&w=700&q=85","price":12900,"desc":"Асүйге арналған","keywords":"су сүзгі фильтр"},
+{"id":186,"name":"Табалар жинағы","category":"home","emoji":"🍳","image":"https://images.unsplash.com/photo-1493106641515-6b5631de4bb9?auto=format&fit=crop&w=700&q=85","price":19900,"desc":"3 дана","keywords":"таба сковорода ыдыс"},
+{"id":187,"name":"Кәстрөлдер жинағы","category":"home","emoji":"🍲","image":"https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=700&q=85","price":29900,"desc":"5 дана","keywords":"кәстрөл кастрюля ыдыс"},
+{"id":188,"name":"Пышақтар жинағы","category":"home","emoji":"🔪","image":"https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=700&q=85","price":14900,"desc":"6 дана","keywords":"пышақ нож асүй"},
+{"id":189,"name":"Асүй тақтайы","category":"home","emoji":"🪵","image":"https://images.unsplash.com/photo-1570222094114-d054a817e56b?auto=format&fit=crop&w=700&q=85","price":3900,"desc":"Ағаш • Кесу тақтайы","keywords":"тақтай доска асүй"},
+{"id":190,"name":"Термос құмыра","category":"home","emoji":"🫖","image":"https://images.unsplash.com/photo-1594213114663-d94db9b171e2?auto=format&fit=crop&w=700&q=85","price":8900,"desc":"1.5 л","keywords":"термос құмыра"},
+{"id":191,"name":"Су құтысы","category":"home","emoji":"🚰","image":"https://images.unsplash.com/photo-1558317374-067fb5f30001?auto=format&fit=crop&w=700&q=85","price":4900,"desc":"1 л • Қайта қолдануға","keywords":"су құты бөтелке"},
+{"id":192,"name":"Төсек жаймасы","category":"home","emoji":"🛏️","image":"https://images.unsplash.com/photo-1493106641515-6b5631de4bb9?auto=format&fit=crop&w=700&q=85","price":16900,"desc":"2 адамға арналған","keywords":"төсек жайма постель"},
+{"id":193,"name":"Жастық","category":"home","emoji":"🛏️","image":"https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=700&q=85","price":7900,"desc":"Жұмсақ • 50×70","keywords":"жастық подушка"},
+{"id":194,"name":"Көрпе","category":"home","emoji":"🛌","image":"https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=700&q=85","price":22900,"desc":"Жылы • Жеңіл","keywords":"көрпе одеяло"},
+{"id":195,"name":"Матрас төсеніш","category":"home","emoji":"🛏️","image":"https://images.unsplash.com/photo-1570222094114-d054a817e56b?auto=format&fit=crop&w=700&q=85","price":14900,"desc":"Қорғаныш қабаты","keywords":"матрас төсеніш"},
+{"id":196,"name":"Перде жинағы","category":"home","emoji":"🪟","image":"https://images.unsplash.com/photo-1594213114663-d94db9b171e2?auto=format&fit=crop&w=700&q=85","price":19900,"desc":"2 дана","keywords":"перде шторы үй"},
+{"id":197,"name":"Кілемше","category":"home","emoji":"🧶","image":"https://images.unsplash.com/photo-1558317374-067fb5f30001?auto=format&fit=crop&w=700&q=85","price":12900,"desc":"Қонақ бөлмеге","keywords":"кілем коврик үй"},
+{"id":198,"name":"Жуынатын бөлме кілемшесі","category":"home","emoji":"🛁","image":"https://images.unsplash.com/photo-1493106641515-6b5631de4bb9?auto=format&fit=crop&w=700&q=85","price":4900,"desc":"Су сіңіргіш","keywords":"кілемше ванна коврик"},
+{"id":199,"name":"Кір себеті","category":"home","emoji":"🧺","image":"https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=700&q=85","price":8900,"desc":"Жиналмалы","keywords":"кір себеті корзина"},
+{"id":200,"name":"Сақтау қорабы","category":"home","emoji":"📦","image":"https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=700&q=85","price":3900,"desc":"Пластик • Қақпақты","keywords":"қорап сақтау контейнер"},
+{"id":201,"name":"Киім ілгіштер","category":"home","emoji":"🪝","image":"https://images.unsplash.com/photo-1570222094114-d054a817e56b?auto=format&fit=crop&w=700&q=85","price":2900,"desc":"10 дана","keywords":"ілгіш вешалка киім"},
+{"id":202,"name":"Айна","category":"home","emoji":"🪞","image":"https://images.unsplash.com/photo-1594213114663-d94db9b171e2?auto=format&fit=crop&w=700&q=85","price":11900,"desc":"Қабырғаға ілінеді","keywords":"айна зеркало"},
+{"id":203,"name":"Қабырға сағаты","category":"home","emoji":"🕰️","image":"https://images.unsplash.com/photo-1558317374-067fb5f30001?auto=format&fit=crop&w=700&q=85","price":8900,"desc":"Үй интерьері","keywords":"сағат часы қабырға"},
+{"id":204,"name":"Киім шкафы","category":"home","emoji":"🚪","image":"https://images.unsplash.com/photo-1493106641515-6b5631de4bb9?auto=format&fit=crop&w=700&q=85","price":89900,"desc":"3 есікті","keywords":"шкаф жиһаз мебель"},
+{"id":205,"name":"Кітап сөресі","category":"home","emoji":"📚","image":"https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=700&q=85","price":39900,"desc":"4 қабатты","keywords":"сөре полка жиһаз"},
+{"id":206,"name":"Жиналмалы орындық","category":"home","emoji":"🪑","image":"https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=700&q=85","price":14900,"desc":"Ықшам • Үйге","keywords":"орындық стул жиһаз"},
+{"id":207,"name":"Жұмыс үстелі","category":"home","emoji":"🪑","image":"https://images.unsplash.com/photo-1570222094114-d054a817e56b?auto=format&fit=crop&w=700&q=85","price":49900,"desc":"Компьютерге арналған","keywords":"үстел стол жиһаз"},
+{"id":208,"name":"Пернетақта тазалау жинағы","category":"home","emoji":"🧽","image":"https://images.unsplash.com/photo-1594213114663-d94db9b171e2?auto=format&fit=crop&w=700&q=85","price":3900,"desc":"Үй және техника күтімі","keywords":"тазалау жинағы щетка"},
+{"id":209,"name":"Швабра жинағы","category":"home","emoji":"🧹","image":"https://images.unsplash.com/photo-1558317374-067fb5f30001?auto=format&fit=crop&w=700&q=85","price":9900,"desc":"Шелекпен бірге","keywords":"швабра mop тазалау"},
+{"id":210,"name":"Қоқыс шелегі","category":"home","emoji":"🗑️","image":"https://images.unsplash.com/photo-1493106641515-6b5631de4bb9?auto=format&fit=crop&w=700&q=85","price":5900,"desc":"Қақпақты","keywords":"қоқыс шелегі ведро"},
+{"id":211,"name":"Кір жуғыш ұнтақ","category":"home","emoji":"🧴","image":"https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=700&q=85","price":4900,"desc":"Тұрмыстық тазалық","keywords":"кір жуғыш ұнтақ порошок"},
+{"id":212,"name":"Ыдыс жуу сұйықтығы","category":"home","emoji":"🧴","image":"https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=700&q=85","price":1900,"desc":"Асүйге арналған","keywords":"ыдыс жуу сұйықтық"},
+{"id":213,"name":"A4 торкөз дәптер","category":"school","emoji":"📓","image":"https://images.unsplash.com/photo-1531346878377-a5be20888e57?auto=format&fit=crop&w=700&q=85","price":1200,"desc":"48 бет","keywords":"дәптер тетрадь мектеп"},
+{"id":214,"name":"A4 жол дәптер","category":"school","emoji":"📓","image":"https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=700&q=85","price":1200,"desc":"48 бет","keywords":"дәптер тетрадь мектеп"},
+{"id":215,"name":"Қалың дәптер","category":"school","emoji":"📓","image":"https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=700&q=85","price":1900,"desc":"96 бет","keywords":"дәптер тетрадь мектеп"},
+{"id":216,"name":"Күнделік","category":"school","emoji":"📔","image":"https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?auto=format&fit=crop&w=700&q=85","price":2500,"desc":"Оқушыға арналған","keywords":"күнделік дневник мектеп"},
+{"id":217,"name":"Скетчбук","category":"school","emoji":"🎨","image":"https://images.unsplash.com/photo-1503919005314-30d93d07d823?auto=format&fit=crop&w=700&q=85","price":3900,"desc":"Сурет салуға","keywords":"скетчбук альбом сурет"},
+{"id":218,"name":"Акварель бояуы","category":"school","emoji":"🎨","image":"https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&w=700&q=85","price":2900,"desc":"12 түс","keywords":"бояу акварель сурет"},
+{"id":219,"name":"Гуашь бояуы","category":"school","emoji":"🎨","image":"https://images.unsplash.com/photo-1519682337058-a94d519337bc?auto=format&fit=crop&w=700&q=85","price":3900,"desc":"12 түс","keywords":"гуашь бояу сурет"},
+{"id":220,"name":"Қылқалам жинағы","category":"school","emoji":"🖌️","image":"https://images.unsplash.com/photo-1531346878377-a5be20888e57?auto=format&fit=crop&w=700&q=85","price":1900,"desc":"6 өлшем","keywords":"қылқалам кисть сурет"},
+{"id":221,"name":"Маркерлер жинағы","category":"school","emoji":"🖍️","image":"https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=700&q=85","price":4900,"desc":"12 түс","keywords":"маркер фломастер мектеп"},
+{"id":222,"name":"Highlighter маркерлері","category":"school","emoji":"🖍️","image":"https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=700&q=85","price":2900,"desc":"4 түс","keywords":"маркер бөлгіш хайлайтер"},
+{"id":223,"name":"Қара гель қалам","category":"school","emoji":"🖊️","image":"https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?auto=format&fit=crop&w=700&q=85","price":900,"desc":"0.5 мм","keywords":"қалам ручка мектеп"},
+{"id":224,"name":"Көк сиялы қалам","category":"school","emoji":"🖊️","image":"https://images.unsplash.com/photo-1503919005314-30d93d07d823?auto=format&fit=crop&w=700&q=85","price":700,"desc":"0.7 мм","keywords":"қалам ручка мектеп"},
+{"id":225,"name":"Автоматты қарындаш","category":"school","emoji":"✏️","image":"https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&w=700&q=85","price":1200,"desc":"0.5 мм","keywords":"қарындаш карандаш мектеп"},
+{"id":226,"name":"Қарындаш ұштағыш","category":"school","emoji":"✏️","image":"https://images.unsplash.com/photo-1519682337058-a94d519337bc?auto=format&fit=crop&w=700&q=85","price":600,"desc":"Контейнерімен","keywords":"ұштағыш точилка"},
+{"id":227,"name":"Өшіргіш жинағы","category":"school","emoji":"🧽","image":"https://images.unsplash.com/photo-1531346878377-a5be20888e57?auto=format&fit=crop&w=700&q=85","price":700,"desc":"3 дана","keywords":"өшіргіш ластик"},
+{"id":228,"name":"Сызғыш 30 см","category":"school","emoji":"📏","image":"https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=700&q=85","price":500,"desc":"Мөлдір","keywords":"сызғыш линейка"},
+{"id":229,"name":"Циркуль","category":"school","emoji":"📐","image":"https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=700&q=85","price":1500,"desc":"Металл","keywords":"циркуль геометрия"},
+{"id":230,"name":"Транспортир","category":"school","emoji":"📐","image":"https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?auto=format&fit=crop&w=700&q=85","price":400,"desc":"180 градус","keywords":"транспортир геометрия"},
+{"id":231,"name":"Қайшы","category":"school","emoji":"✂️","image":"https://images.unsplash.com/photo-1503919005314-30d93d07d823?auto=format&fit=crop&w=700&q=85","price":1200,"desc":"Қауіпсіз ұшы","keywords":"қайшы ножницы мектеп"},
+{"id":232,"name":"Желім-қарындаш","category":"school","emoji":"🧴","image":"https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&w=700&q=85","price":700,"desc":"15 г","keywords":"желім клей мектеп"},
+{"id":233,"name":"Түрлі түсті қағаз","category":"school","emoji":"📄","image":"https://images.unsplash.com/photo-1519682337058-a94d519337bc?auto=format&fit=crop&w=700&q=85","price":900,"desc":"16 түс","keywords":"қағаз цветная бумага"},
+{"id":234,"name":"Картон жинағы","category":"school","emoji":"📄","image":"https://images.unsplash.com/photo-1531346878377-a5be20888e57?auto=format&fit=crop&w=700&q=85","price":1200,"desc":"10 түс","keywords":"картон қағаз мектеп"},
+{"id":235,"name":"Альбом","category":"school","emoji":"📒","image":"https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=700&q=85","price":1000,"desc":"20 бет","keywords":"альбом сурет мектеп"},
+{"id":236,"name":"Папка","category":"school","emoji":"📁","image":"https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=700&q=85","price":900,"desc":"A4 формат","keywords":"папка файл құжат"},
+{"id":237,"name":"Файл жинағы","category":"school","emoji":"📂","image":"https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?auto=format&fit=crop&w=700&q=85","price":1500,"desc":"100 дана","keywords":"файл папка кеңсе"},
+{"id":238,"name":"Құжат папкасы","category":"school","emoji":"📁","image":"https://images.unsplash.com/photo-1503919005314-30d93d07d823?auto=format&fit=crop&w=700&q=85","price":1900,"desc":"Сыдырмалы","keywords":"папка құжат"},
+{"id":239,"name":"Кітап қаптамасы","category":"school","emoji":"📚","image":"https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&w=700&q=85","price":600,"desc":"Мөлдір","keywords":"кітап қаптама обложка"},
+{"id":240,"name":"Оқулық тіреуіші","category":"school","emoji":"📚","image":"https://images.unsplash.com/photo-1519682337058-a94d519337bc?auto=format&fit=crop&w=700&q=85","price":3900,"desc":"Металл","keywords":"кітап тіреуіш подставка"},
+{"id":241,"name":"Кітап белгісі","category":"school","emoji":"🔖","image":"https://images.unsplash.com/photo-1531346878377-a5be20888e57?auto=format&fit=crop&w=700&q=85","price":500,"desc":"Жинақ • 5 дана","keywords":"бетбелгі закладка кітап"},
+{"id":242,"name":"Калькулятор","category":"school","emoji":"🧮","image":"https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=700&q=85","price":4900,"desc":"Ғылыми функциялар","keywords":"калькулятор есеп"},
+{"id":243,"name":"USB флешка 32GB","category":"school","emoji":"💾","image":"https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=700&q=85","price":3900,"desc":"Оқу файлдарына","keywords":"флешка usb жады"},
+{"id":244,"name":"Презентация пульті","category":"school","emoji":"🎤","image":"https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?auto=format&fit=crop&w=700&q=85","price":12900,"desc":"Сымсыз басқару","keywords":"пульт презентация мектеп"},
+{"id":245,"name":"Оқушы ланч-боксы","category":"school","emoji":"🍱","image":"https://images.unsplash.com/photo-1503919005314-30d93d07d823?auto=format&fit=crop&w=700&q=85","price":3900,"desc":"Бөлімдері бар","keywords":"ланчбокс ас контейнер мектеп"},
+{"id":246,"name":"Қаламсауыт кең","category":"school","emoji":"🖍️","image":"https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&w=700&q=85","price":4900,"desc":"Үлкен сыйымдылық","keywords":"пенал қаламсауыт мектеп"},
+{"id":247,"name":"Мектеп рюкзагы","category":"school","emoji":"🎒","image":"https://images.unsplash.com/photo-1519682337058-a94d519337bc?auto=format&fit=crop&w=700&q=85","price":18900,"desc":"Ортопедиялық арқа","keywords":"рюкзак сөмке мектеп"},
+{"id":248,"name":"Спорттық форма","category":"school","emoji":"🏃","image":"https://images.unsplash.com/photo-1531346878377-a5be20888e57?auto=format&fit=crop&w=700&q=85","price":12900,"desc":"Дене шынықтыруға","keywords":"спорт форма мектеп киім"},
+{"id":249,"name":"Ауыстыратын аяқ киім сөмкесі","category":"school","emoji":"👟","image":"https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=700&q=85","price":2900,"desc":"Жеңіл қап","keywords":"аяқ киім қап сөмке мектеп"},
+{"id":250,"name":"Глобус","category":"school","emoji":"🌍","image":"https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=700&q=85","price":6900,"desc":"Географияға","keywords":"глобус география мектеп"},
+{"id":251,"name":"Әлем картасы","category":"school","emoji":"🗺️","image":"https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?auto=format&fit=crop&w=700&q=85","price":1900,"desc":"Қабырғаға арналған","keywords":"карта география мектеп"},
+{"id":252,"name":"Ағылшын сөздік дәптері","category":"school","emoji":"📓","image":"https://images.unsplash.com/photo-1503919005314-30d93d07d823?auto=format&fit=crop&w=700&q=85","price":1200,"desc":"Сөз жаттауға","keywords":"сөздік дәптер ағылшын"},
+{"id":253,"name":"Шахмат жинағы","category":"school","emoji":"♟️","image":"https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&w=700&q=85","price":7900,"desc":"Оқу және ойын","keywords":"шахмат ойын мектеп"},
+{"id":254,"name":"Математика есепшоты","category":"school","emoji":"🧮","image":"https://images.unsplash.com/photo-1519682337058-a94d519337bc?auto=format&fit=crop&w=700&q=85","price":2900,"desc":"Оқу құралы","keywords":"есепшот математика мектеп"},
+{"id":255,"name":"Су құтысы оқушыға","category":"school","emoji":"🚰","image":"https://images.unsplash.com/photo-1531346878377-a5be20888e57?auto=format&fit=crop&w=700&q=85","price":3900,"desc":"500 мл","keywords":"су құты бөтелке мектеп"},
+{"id":256,"name":"LEGO City құрастырғышы","category":"other","emoji":"🧱","image":"https://images.unsplash.com/photo-1587654780291-39c9404d746b?auto=format&fit=crop&w=700&q=85","price":14900,"desc":"Балаларға арналған","keywords":"ойыншық lego конструктор"},
+{"id":257,"name":"Қуыршақ","category":"other","emoji":"🪆","image":"https://images.unsplash.com/photo-1592432678016-e910b452f9a2?auto=format&fit=crop&w=700&q=85","price":8900,"desc":"Ойыншық • Киім жиынтығы","keywords":"қуыршақ ойыншық балалар"},
+{"id":258,"name":"Қашықтан басқарылатын көлік","category":"other","emoji":"🚗","image":"https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=700&q=85","price":12900,"desc":"RC • Батареямен","keywords":"машина ойыншық балалар"},
+{"id":259,"name":"Жұмсақ аю ойыншығы","category":"other","emoji":"🧸","image":"https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=700&q=85","price":6900,"desc":"Сыйлыққа","keywords":"аю ойыншық жұмсақ"},
+{"id":260,"name":"Пазл 1000 бөлшек","category":"other","emoji":"🧩","image":"https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?auto=format&fit=crop&w=700&q=85","price":5900,"desc":"Логикалық ойын","keywords":"пазл жұмбақ ойын"},
+{"id":261,"name":"Үстел ойыны Монополия","category":"other","emoji":"🎲","image":"https://images.unsplash.com/photo-1587654780291-39c9404d746b?auto=format&fit=crop&w=700&q=85","price":9900,"desc":"Отбасылық ойын","keywords":"монополия үстел ойыны"},
+{"id":262,"name":"UNO карталары","category":"other","emoji":"🃏","image":"https://images.unsplash.com/photo-1592432678016-e910b452f9a2?auto=format&fit=crop&w=700&q=85","price":1900,"desc":"Карточкалық ойын","keywords":"uno карта ойын"},
+{"id":263,"name":"Доп футбол","category":"other","emoji":"⚽","image":"https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=700&q=85","price":7900,"desc":"№5 өлшем","keywords":"футбол доп спорт"},
+{"id":264,"name":"Баскетбол добы","category":"other","emoji":"🏀","image":"https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=700&q=85","price":9900,"desc":"Резеңке • №7","keywords":"баскетбол доп спорт"},
+{"id":265,"name":"Волейбол добы","category":"other","emoji":"🏐","image":"https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?auto=format&fit=crop&w=700&q=85","price":8900,"desc":"Жаттығуға","keywords":"волейбол доп спорт"},
+{"id":266,"name":"Секіртпе","category":"other","emoji":"🪢","image":"https://images.unsplash.com/photo-1587654780291-39c9404d746b?auto=format&fit=crop&w=700&q=85","price":1900,"desc":"Фитнеске арналған","keywords":"секіртпе спорт жаттығу"},
+{"id":267,"name":"Гантельдер 2×2 кг","category":"other","emoji":"🏋️","image":"https://images.unsplash.com/photo-1592432678016-e910b452f9a2?auto=format&fit=crop&w=700&q=85","price":8900,"desc":"Үй жаттығуына","keywords":"гантель спорт фитнес"},
+{"id":268,"name":"Эспандер","category":"other","emoji":"💪","image":"https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=700&q=85","price":2900,"desc":"Қол жаттығуы","keywords":"эспандер спорт"},
+{"id":269,"name":"Спорт сөмкесі","category":"other","emoji":"🎒","image":"https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=700&q=85","price":12900,"desc":"Жаттығуға","keywords":"спорт сөмке сумка"},
+{"id":270,"name":"Велосипед дулығасы","category":"other","emoji":"🚴","image":"https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?auto=format&fit=crop&w=700&q=85","price":14900,"desc":"Қорғаныс","keywords":"дулыға шлем велосипед"},
+{"id":271,"name":"Саяхат рюкзагы","category":"other","emoji":"🎒","image":"https://images.unsplash.com/photo-1587654780291-39c9404d746b?auto=format&fit=crop&w=700&q=85","price":22900,"desc":"40 литр","keywords":"рюкзак саяхат сөмке"},
+{"id":272,"name":"Чемодан","category":"other","emoji":"🧳","image":"https://images.unsplash.com/photo-1592432678016-e910b452f9a2?auto=format&fit=crop&w=700&q=85","price":39900,"desc":"Орта өлшем","keywords":"чемодан жол сөмке"},
+{"id":273,"name":"Жолға арналған жастық","category":"other","emoji":"🛫","image":"https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=700&q=85","price":4900,"desc":"Мойынға тіреу","keywords":"жастық саяхат"},
+{"id":274,"name":"Кемпинг шамы","category":"other","emoji":"🔦","image":"https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=700&q=85","price":5900,"desc":"Аккумулятормен","keywords":"шам фонарь кемпинг"},
+{"id":275,"name":"Пикник төсеніш","category":"other","emoji":"🏕️","image":"https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?auto=format&fit=crop&w=700&q=85","price":6900,"desc":"Суға төзімді","keywords":"пикник төсеніш табиғат"},
+{"id":276,"name":"Үстел күнтізбесі","category":"other","emoji":"🗓️","image":"https://images.unsplash.com/photo-1587654780291-39c9404d746b?auto=format&fit=crop&w=700&q=85","price":1900,"desc":"2026 жыл","keywords":"күнтізбе календарь"},
+{"id":277,"name":"Сыйлық қорабы","category":"other","emoji":"🎁","image":"https://images.unsplash.com/photo-1592432678016-e910b452f9a2?auto=format&fit=crop&w=700&q=85","price":2900,"desc":"Әдемі қаптама","keywords":"сыйлық қорап упаковка"},
+{"id":278,"name":"Хош иісті шам","category":"other","emoji":"🕯️","image":"https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=700&q=85","price":3900,"desc":"Үйге арналған","keywords":"шам свеча хош иіс"},
+{"id":279,"name":"Диффузор","category":"other","emoji":"🌸","image":"https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=700&q=85","price":6900,"desc":"Үй хош иістендіргіші","keywords":"диффузор аромат үй"},
+{"id":280,"name":"Фотоальбом","category":"other","emoji":"📔","image":"https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?auto=format&fit=crop&w=700&q=85","price":5900,"desc":"200 фотоға","keywords":"альбом фото сурет"},
+{"id":281,"name":"Үстел ойыны Дженга","category":"other","emoji":"🪵","image":"https://images.unsplash.com/photo-1587654780291-39c9404d746b?auto=format&fit=crop&w=700&q=85","price":4900,"desc":"Ағаш бөлшектер","keywords":"дженга ойын ойыншық"},
+{"id":282,"name":"Балалар конструкторы","category":"other","emoji":"🧩","image":"https://images.unsplash.com/photo-1592432678016-e910b452f9a2?auto=format&fit=crop&w=700&q=85","price":7900,"desc":"Құрастыру ойыны","keywords":"конструктор ойыншық балалар"},
+{"id":283,"name":"Робот ойыншық","category":"other","emoji":"🤖","image":"https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=700&q=85","price":16900,"desc":"Қозғалмалы","keywords":"робот ойыншық балалар"},
+{"id":284,"name":"Балалар самокаты","category":"other","emoji":"🛴","image":"https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=700&q=85","price":24900,"desc":"Үш дөңгелекті","keywords":"самокат балалар ойын"},
+{"id":285,"name":"Сабын көпіршігі жинағы","category":"other","emoji":"🫧","image":"https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?auto=format&fit=crop&w=700&q=85","price":1900,"desc":"Балаларға","keywords":"көпіршік ойыншық балалар"},
+{"id":286,"name":"Аквариум","category":"other","emoji":"🐠","image":"https://images.unsplash.com/photo-1587654780291-39c9404d746b?auto=format&fit=crop&w=700&q=85","price":12900,"desc":"Шағын • Үйге","keywords":"аквариум үй жануар"},
+{"id":287,"name":"Үй жануарына төсеніш","category":"other","emoji":"🐾","image":"https://images.unsplash.com/photo-1592432678016-e910b452f9a2?auto=format&fit=crop&w=700&q=85","price":6900,"desc":"Жұмсақ","keywords":"жануар төсеніш ит мысық"},
+{"id":288,"name":"Мысыққа ойыншық","category":"other","emoji":"🐈","image":"https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=700&q=85","price":1900,"desc":"Қауырсынды таяқша","keywords":"мысық ойыншық жануар"},
+{"id":289,"name":"Итке қарғыбау","category":"other","emoji":"🐕","image":"https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=700&q=85","price":3900,"desc":"Реттелетін","keywords":"ит қарғыбау жануар"},
+{"id":290,"name":"Гүл құмырасы","category":"other","emoji":"🪴","image":"https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?auto=format&fit=crop&w=700&q=85","price":2900,"desc":"Үй өсімдігіне","keywords":"гүл құмыра өсімдік"},
+{"id":291,"name":"Су құятын құмыра","category":"other","emoji":"🌱","image":"https://images.unsplash.com/photo-1587654780291-39c9404d746b?auto=format&fit=crop&w=700&q=85","price":1900,"desc":"Бақшаға","keywords":"су құйғыш бақша"},
+{"id":292,"name":"Бақша қолғаптары","category":"other","emoji":"🧤","image":"https://images.unsplash.com/photo-1592432678016-e910b452f9a2?auto=format&fit=crop&w=700&q=85","price":1900,"desc":"Жұмысқа арналған","keywords":"бақша қолғап"},
+{"id":293,"name":"Қол шамы","category":"other","emoji":"🔦","image":"https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=700&q=85","price":3900,"desc":"LED • Қуатты","keywords":"фонарь қол шам"},
+{"id":294,"name":"Құрал-сайман жинағы","category":"other","emoji":"🧰","image":"https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=700&q=85","price":14900,"desc":"Үй жөндеуіне","keywords":"құрал сайман жөндеу"},
+{"id":295,"name":"Рулетка 5 м","category":"other","emoji":"📏","image":"https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?auto=format&fit=crop&w=700&q=85","price":1900,"desc":"Өлшеу құралы","keywords":"рулетка өлшеу"},
+{"id":296,"name":"Бұрауыш жинағы","category":"other","emoji":"🪛","image":"https://images.unsplash.com/photo-1587654780291-39c9404d746b?auto=format&fit=crop&w=700&q=85","price":4900,"desc":"6 түрлі ұштық","keywords":"бұрауыш отвертка құрал"},
+{"id":297,"name":"Автокөлік телефон ұстағышы","category":"other","emoji":"🚘","image":"https://images.unsplash.com/photo-1592432678016-e910b452f9a2?auto=format&fit=crop&w=700&q=85","price":4900,"desc":"Панельге бекітіледі","keywords":"авто ұстағыш держатель"},
+{"id":298,"name":"Автокөлік компрессоры","category":"other","emoji":"🚗","image":"https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=700&q=85","price":16900,"desc":"Дөңгелек үрлеу","keywords":"авто компрессор машина"},
+{"id":299,"name":"Алғашқы көмек қобдишасы","category":"other","emoji":"🩹","image":"https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=700&q=85","price":5900,"desc":"Жолға арналған","keywords":"дәрі қобдиша аптечка"},
+{"id":300,"name":"Термосумка","category":"other","emoji":"🧊","image":"https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?auto=format&fit=crop&w=700&q=85","price":8900,"desc":"Пикникке","keywords":"термосумка сөмке пикник"},
+];
+const $=id=>document.getElementById(id);
+let lang=SAFE_LS.getItem("sham-lang")||"kk",dark=SAFE_LS.getItem("sham-dark")==="1";
+let profile=JSON.parse(SAFE_LS.getItem("sham-profile")||"{}"),cart=JSON.parse(SAFE_LS.getItem("sham-cart")||"[]"),orders=JSON.parse(SAFE_LS.getItem("sham-orders")||"[]"),codeSent=false,verifiedEmail="";
+const words={
+kk:{home:"Басты бет",shop:"Дүкен",settings:"Баптаулар",catalog:"Тауарлар каталогы",search:"Тауарды іздеу...",all:"Барлық санат",phone:"Смартфондар",laptop:"Ноутбуктер",audio:"Құлаққаптар",watch:"Сағаттар",add:"Себетке қосу",cart:"Себет",buy:"Сатып алу",language:"Тіл / Язык",theme:"Түстер режимі",light:"Жарық режимге ауысу",dark:"Қараңғы режимге ауысу",empty:"Себет әзірге бос.",added:"Себетке қосылды",noProducts:"Тауар табылмады",orderDone:"Тапсырыс қабылданды!",send:"Email-ге код жіберу",sent:"Растау коды email-ге жіберілді.",verified:"Email сәтті расталды.",needVerify:"Алдымен email-ді раста.",order:"Тапсырыс",history:"Тапсырыстар тарихы",profile:"Профиль деректері",profileEmpty:"Әзірге профиль толтырылмаған."},
+ru:{home:"Главная",shop:"Магазин",settings:"Настройки",catalog:"Каталог товаров",search:"Поиск товара...",all:"Все категории",phone:"Смартфоны",laptop:"Ноутбуки",audio:"Наушники",watch:"Часы",add:"В корзину",cart:"Корзина",buy:"Купить",language:"Язык / Тіл",theme:"Цветовая тема",light:"Включить светлую тему",dark:"Включить тёмную тему",empty:"Корзина пока пуста.",added:"Добавлено в корзину",noProducts:"Товары не найдены",orderDone:"Заказ принят!",send:"Отправить код на email",sent:"Код отправлен на email.",verified:"Email успешно подтверждён.",needVerify:"Сначала подтвердите email.",order:"Заказ",history:"История заказов",profile:"Данные профиля",profileEmpty:"Профиль пока не заполнен."}
+};
+const tr=k=>words[lang][k]||k;
+function format(n){return new Intl.NumberFormat(lang==="kk"?"kk-KZ":"ru-RU").format(n)+(lang==="kk"?" ₸":" ₸")}
+const ones=["","бір","екі","үш","төрт","бес","алты","жеті","сегіз","тоғыз"],teens=["он","он бір","он екі","он үш","он төрт","он бес","он алты","он жеті","он сегіз","он тоғыз"],tens=["","","жиырма","отыз","қырық","елу","алпыс","жетпіс","сексен","тоқсан"];
+function under100(n){if(n<10)return ones[n];if(n<20)return teens[n-10];return (tens[Math.floor(n/10)]+" "+ones[n%10]).trim()}
+function kazakhNumber(n){if(n===0)return"нөл";let out=[];let m=Math.floor(n/1000000),th=Math.floor(n%1000000/1000),r=n%1000;if(m)out.push((m===1?"бір":under100(m))+" миллион");if(th)out.push((th===1?"бір":th<100?under100(th):under100(Math.floor(th/100))+" жүз "+under100(th%100))+" мың");if(r){if(r>=100)out.push((r===100?"бір":ones[Math.floor(r/100)])+" жүз");if(r%100)out.push(under100(r%100))}return out.join(" ").replace(/  +/g," ").trim()}
+function priceMarkup(p){return '<span class="product-price">'+format(p.price)+'<small>'+kazakhNumber(p.price)+" теңге"+'</small></span>'}
+function toast(s){$("toast").textContent=s;$("toast").classList.add("show");setTimeout(()=>$("toast").classList.remove("show"),2400)}
+function go(page){document.querySelectorAll(".page").forEach(x=>x.classList.toggle("active",x.id===page));document.querySelectorAll(".nav-btn").forEach(x=>x.classList.toggle("active",x.dataset.page===page));if(page==="checkout")renderCheckout();if(page==="settings")renderProfile();window.scrollTo({top:0,behavior:"smooth"})}
+document.querySelectorAll("[data-page]").forEach(b=>b.addEventListener("click",()=>go(b.dataset.page)));
+$("brandHome").addEventListener("click",e=>{e.preventDefault();go("welcome")});
+$("profileForm").addEventListener("submit",e=>{e.preventDefault();profile={first:$("firstName").value.trim(),last:$("lastName").value.trim(),phone:$("phone").value.trim()};SAFE_LS.setItem("sham-profile",JSON.stringify(profile));fillCheckout();renderProfile();go("shop")});
+function fillCheckout(){if(profile.first){$("oFirst").value=profile.first;$("firstName").value=profile.first}if(profile.last){$("oLast").value=profile.last;$("lastName").value=profile.last}if(profile.phone){$("oPhone").value=profile.phone;$("phone").value=profile.phone}}
+function renderProfile(){$("profileSummary").textContent=profile.first?[profile.first,profile.last,profile.phone].filter(Boolean).join(" • "):tr("profileEmpty")}
+function normalizeSearch(value){return value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/ә/g,"а").replace(/ө/g,"о").replace(/[үұ]/g,"у").replace(/қ/g,"к").replace(/ғ/g,"г").replace(/ң/g,"н").replace(/і/g,"и").replace(/ё/g,"е").replace(/[^a-zа-я0-9 ]/g," ").replace(/\s+/g," ").trim()}
+const categoryNames={kk:{all:"Барлық тауар",electronics:"Электроника",accessories:"Аксессуарлар",clothing:"Киім және аяқ киім",home:"Тұрмыстық заттар",school:"Мектеп құралдары",other:"Басқа заттар"},ru:{all:"Все товары",electronics:"Электроника",accessories:"Аксессуары",clothing:"Одежда и обувь",home:"Товары для дома",school:"Школьные принадлежности",other:"Другие товары"}};
+function renderCategoryOptions(){const s=$("category"),v=s.value||"all";s.innerHTML=Object.entries(categoryNames[lang]).map(([k,n])=>'<option value="'+k+'">'+n+'</option>').join("");s.value=categoryNames[lang][v]?v:"all"}
+function renderProducts(){const q=normalizeSearch($("searchInput").value),cat=$("category").value,sort=$("sort").value;let list=products.filter(p=>(cat==="all"||p.category===cat)&&(!q||normalizeSearch([p.name,p.desc,p.keywords||"",p.category].join(" ")).includes(q)));if(sort==="low")list.sort((a,b)=>a.price-b.price);if(sort==="high")list.sort((a,b)=>b.price-a.price);$("productCount").textContent=String(list.length).padStart(2,"0");$("products").innerHTML=list.length?list.map(p=>'<article class="product-card"><div class="product-art">'+artSvg(p)+'<img class="photo" src="images/'+p.id+'.jpg" data-u="'+p.image+'" alt="'+p.name+'" loading="lazy" onerror="if(!this.dataset.t){this.dataset.t=1;this.src=this.dataset.u}else{this.remove()}"></div><div class="product-info"><h3>'+p.name+'</h3><p>'+p.desc+'</p><div class="product-bottom">'+priceMarkup(p)+'<button class="add-btn" data-add="'+p.id+'" aria-label="'+tr("add")+'">+</button></div></div></article>').join(""):'<div class="empty">'+tr("noProducts")+'</div>';$("products").querySelectorAll("img").forEach(img=>img.addEventListener("error",()=>{img.style.display="none";if(img.nextElementSibling)img.nextElementSibling.style.display="grid"}))}
+function saveCart(){SAFE_LS.setItem("sham-cart",JSON.stringify(cart))}
+function cartCount(){return cart.reduce((s,x)=>s+x.qty,0)}
+function cartSum(){return cart.reduce((s,x)=>{const p=products.find(p=>p.id===x.id);return s+(p?p.price*x.qty:0)},0)}
+function add(id){const item=cart.find(x=>x.id===id);if(item)item.qty++;else cart.push({id,qty:1});saveCart();renderCart();toast(tr("added"))}
+function renderCart(){$("cartCount").textContent=cartCount();$("cartTotal").textContent=format(cartSum());$("cartItems").innerHTML=cart.length?cart.map(x=>{const p=products.find(p=>p.id===x.id);return '<div class="cart-row"><div class="cart-thumb">'+artSvg(p)+'</div><div><b>'+p.name+'</b><small>'+format(p.price)+'</small><div class="qty"><button data-qty="'+p.id+'" data-delta="-1">−</button><span>'+x.qty+'</span><button data-qty="'+p.id+'" data-delta="1">+</button></div></div><button class="remove" data-remove="'+p.id+'">×</button></div>'}).join(""):'<div class="empty">'+tr("empty")+'</div>'}
+function renderCheckout(){$("checkoutItems").innerHTML=cart.length?cart.map(x=>{const p=products.find(p=>p.id===x.id);return '<div class="summary-line"><span>'+p.name+' × '+x.qty+'</span><b>'+format(p.price*x.qty)+'</b></div>'}).join(""):'<p class="empty">'+tr("empty")+'</p>';$("checkoutTotal").textContent=format(cartSum());fillCheckout()}
+function renderHistory(){$("orderHistory").innerHTML=orders.length?[...orders].reverse().map(o=>'<article class="history-card"><h3>'+tr("order")+' #'+o.id+'</h3><p>'+new Date(o.date).toLocaleString()+'</p><p>'+o.items.map(i=>i.name+" × "+i.qty).join(" • ")+'</p><b>'+format(o.total)+'</b><p>'+o.address+', '+o.city+', '+o.postcode+'</p></article>').join(""):'<div class="empty">'+tr("empty")+'</div>'}
+$("products").addEventListener("click",e=>{const b=e.target.closest("[data-add]");if(b)add(Number(b.dataset.add))});
+$("cartItems").addEventListener("click",e=>{const q=e.target.closest("[data-qty]"),r=e.target.closest("[data-remove]");if(q){const x=cart.find(z=>z.id===Number(q.dataset.qty));x.qty+=Number(q.dataset.delta);if(x.qty<1)cart=cart.filter(z=>z!==x);saveCart();renderCart()}if(r){cart=cart.filter(z=>z.id!==Number(r.dataset.remove));saveCart();renderCart()}});
+$("searchInput").addEventListener("input",renderProducts);$("category").addEventListener("change",renderProducts);$("sort").addEventListener("change",renderProducts);
+function setTheme(){document.body.classList.toggle("dark",dark);$("themeBtn").textContent=dark?"☀":"☾";$("settingsTheme").textContent=dark?tr("light"):tr("dark");SAFE_LS.setItem("sham-dark",dark?"1":"0")}
+$("themeBtn").addEventListener("click",()=>{dark=!dark;setTheme()});$("settingsTheme").addEventListener("click",()=>{dark=!dark;setTheme()});
+function applyLanguage(){
+document.documentElement.lang=lang;$("language").value=lang;
+$("navHome").textContent=tr("home");$("navShop").textContent=tr("shop");$("navSettings").textContent=tr("settings");
+const ru=lang==="ru";
+const set=(id,value)=>{const el=$(id);if(el)el.textContent=value};
+$("searchInput").placeholder=tr("search");
+$("sort").innerHTML=ru?'<option value="default">По умолчанию</option><option value="low">Сначала дешевле</option><option value="high">Сначала дороже</option>':'<option value="default">Әдепкі рет</option><option value="low">Бағасы: арзандан қымбатқа</option><option value="high">Бағасы: қымбаттан арзанға</option>';
+renderCategoryOptions();
+set("navHome",tr("home"));set("navShop",tr("shop"));set("navSettings",tr("settings"));
+set("sendCode",tr("send"));$("cartOpen").firstChild.textContent=tr("cart")+" ";$("checkoutBtn").textContent=tr("buy")+" →";
+const staticText=ru?{
+"welcome .eyebrow":"КУРСОВАЯ РАБОТА","welcome .welcome-brandline":"SHAM • ИНТЕРНЕТ-МАГАЗИН",
+"welcome h1":"Всё необходимое — здесь.","welcome .welcome-copy>p":"SHAM — современный магазин электроники и товаров для повседневной жизни.",
+"welcome .welcome-note":"Обмен товарами — к достатку, встречи и покупки — к радости!",
+"welcome .project-credit>span":"АВТОР ПРОЕКТА","welcome .form-kicker":"ДОБРО ПОЖАЛОВАТЬ","welcome h2":"Создать профиль",
+"shop h1":"Каталог товаров","shop .section-head p":"Найдите нужный товар и добавьте его в корзину.",
+"settings .eyebrow":"ЛИЧНЫЕ НАСТРОЙКИ","settings h1":"Настройки","settings .settings-intro":"Настройте внешний вид и язык магазина SHAM.",
+"settings .settings-card:nth-of-type(1) h3":"Язык","settings .settings-card:nth-of-type(1) p":"Выберите язык сайта.",
+"settings .settings-card:nth-of-type(2) h3":"Цветовая тема","settings .settings-card:nth-of-type(2) p":"Светлый или тёмный режим.",
+"settings .settings-card:nth-of-type(3) h3":"Данные профиля",
+"checkout .back-link":"← Вернуться в магазин","checkout .eyebrow":"ОФОРМЛЕНИЕ ЗАКАЗА","checkout h1":"Данные доставки",
+"checkout .section-head p":"Укажите полный адрес для доставки товара.","checkout .order-summary h3":"Ваша корзина",
+"checkout .summary-total span":"Итого","history h1":"История заказов",
+".drawer-head h2":"Корзина",".drawer-foot .summary-total span":"Общая сумма","footer button":"История заказов"
+}:{
+"welcome .eyebrow":"КУРСТЫҚ ЖҰМЫС","welcome .welcome-brandline":"SHAM • ИНТЕРНЕТ ДҮКЕНІ",
+"welcome h1":"Керегіңнің бәрі осында.","welcome .welcome-copy>p":"SHAM — күнделікті өмірге арналған заманауи электроника дүкені.",
+"welcome .welcome-note":"Алыс-беріс — береке, барыс-келіс — мереке!",
+"welcome .project-credit>span":"ОРЫНДАҒАН АВТОР","welcome .form-kicker":"ҚОШ КЕЛДІҢІЗ","welcome h2":"Профиль ашу",
+"shop h1":"Тауарлар каталогы","shop .section-head p":"Өзіңе керегін ізде де, себетке қос.",
+"settings .eyebrow":"ЖЕКЕ БАПТАУЛАР","settings h1":"Баптаулар","settings .settings-intro":"SHAM дүкенінің көрінісі мен тілін өзіңе ыңғайла.",
+"settings .settings-card:nth-of-type(1) h3":"Тіл / Язык","settings .settings-card:nth-of-type(1) p":"Сайттың тілін таңда.",
+"settings .settings-card:nth-of-type(2) h3":"Түстер режимі","settings .settings-card:nth-of-type(2) p":"Жарық немесе қараңғы көрініс.",
+"settings .settings-card:nth-of-type(3) h3":"Профиль деректері",
+"checkout .back-link":"← Дүкенге қайту","checkout .eyebrow":"ТАПСЫРЫСТЫ РӘСІМДЕУ","checkout h1":"Жеткізу мәліметтері",
+"checkout .section-head p":"Тауарды жеткізу үшін мекенжайыңды толық жаз.","checkout .order-summary h3":"Сіздің себетіңіз",
+"checkout .summary-total span":"Барлығы","history h1":"Тапсырыстар тарихы",
+".drawer-head h2":"Себет",".drawer-foot .summary-total span":"Жалпы сома","footer button":"Тапсырыстар тарихы"
+};
+Object.entries(staticText).forEach(([selector,value])=>{selector=selector.replace(/^(welcome|shop|settings|checkout|history) /,"#$1 ");const el=document.querySelector(selector);if(el)el.textContent=value});
+const labels=ru?{firstName:"Имя",lastName:"Фамилия",phone:"Номер телефона",oFirst:"Имя",oLast:"Фамилия",oPhone:"Номер телефона",oEmail:"Gmail / Email",oCity:"Город",oAddress:"Полный адрес",oPostcode:"Почтовый индекс"}:{firstName:"Атыңыз",lastName:"Тегіңіз",phone:"Телефон нөмірі",oFirst:"Аты",oLast:"Тегі",oPhone:"Телефон нөмірі",oEmail:"Gmail / Email",oCity:"Қала",oAddress:"Толық мекенжай",oPostcode:"Пошта индексі"};
+Object.entries(labels).forEach(([id,label])=>{const el=$(id);if(el&&el.parentElement.tagName==="LABEL")el.parentElement.firstChild.textContent=label});
+$("firstName").placeholder=ru?"Например, Акжол":"Мысалы, Ақжол";$("lastName").placeholder=ru?"Ваша фамилия":"Тегіңіз";
+$("oCity").placeholder=ru?"Например, Атырау":"Мысалы, Атырау";$("oAddress").placeholder=ru?"Улица, дом, квартира":"Көше, үй, пәтер";$("oPostcode").placeholder=ru?"Например, 060000":"Мысалы, 060000";
+$("emailCode").placeholder=ru?"6-значный код":"6 таңбалы код";
+$("verifyCode").textContent=ru?"Подтвердить":"Растау";
+$("profileForm").querySelector('button[type="submit"]').innerHTML=(ru?"Перейти в магазин ":"Дүкенге өту ")+"<span>→</span>";
+$("checkoutForm").querySelector('button[type="submit"]').textContent=ru?"Подтвердить заказ →":"Тапсырысты растау →";
+$("editProfile").textContent=ru?"Изменить":"Өзгерту";
+setTheme();renderProducts();renderCart();renderCheckout();renderProfile();renderHistory()
+}
+$("language").addEventListener("change",e=>{lang=e.target.value;SAFE_LS.setItem("sham-lang",lang);applyLanguage()});
+$("cartOpen").addEventListener("click",()=>{$("cartDrawer").classList.add("show");$("backdrop").classList.add("show")});function closeCart(){$("cartDrawer").classList.remove("show");$("backdrop").classList.remove("show")} $("cartClose").addEventListener("click",closeCart);$("backdrop").addEventListener("click",closeCart);
+$("checkoutBtn").addEventListener("click",()=>{closeCart();if(!cart.length){toast(tr("empty"));return}go("checkout")});
+$("editProfile").addEventListener("click",()=>{go("welcome");$("firstName").focus()});
+$("historyBtn").addEventListener("click",()=>{renderHistory();go("history")});
+$("sendCode").addEventListener("click",async()=>{const email=$("oEmail").value.trim().toLowerCase();if(!email){$("verifyMessage").textContent=lang==="kk"?"Алдымен email енгіз.":"Сначала введи email.";return}const b=$("sendCode");b.disabled=true;try{const r=await fetch("/api/send-code",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email})});const d=await r.json();if(!r.ok)throw Error(d.error||"");codeSent=true;verifiedEmail="";$("verifyMessage").textContent=tr("sent")}catch(err){$("verifyMessage").textContent=err.message||"Қате. Қайталап көр."}finally{b.disabled=false}});
+$("verifyCode").addEventListener("click",async()=>{const email=$("oEmail").value.trim().toLowerCase(),code=$("emailCode").value.trim();if(!codeSent){$("verifyMessage").textContent=lang==="kk"?"Алдымен код сұрат.":"Сначала запроси код.";return}try{const r=await fetch("/api/verify-code",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email,code})});const d=await r.json();if(!r.ok)throw Error(d.error||"");verifiedEmail=email;$("verifyMessage").textContent=tr("verified")}catch(err){verifiedEmail="";$("verifyMessage").textContent=err.message||"Код қате."}});
+$("oEmail").addEventListener("input",()=>{if($("oEmail").value.trim().toLowerCase()!==verifiedEmail){verifiedEmail="";codeSent=false;$("verifyMessage").textContent=""}});
+$("checkoutForm").addEventListener("submit",async e=>{e.preventDefault();if(!cart.length){$("orderMessage").textContent=tr("empty");return}const email=$("oEmail").value.trim().toLowerCase();if(!verifiedEmail||email!==verifiedEmail){$("orderMessage").textContent=tr("needVerify");return}const items=cart.map(x=>{const p=products.find(p=>p.id===x.id);return{name:p.name,qty:x.qty,price:p.price}}),total=cartSum();const order={id:Date.now().toString().slice(-8),date:new Date().toISOString(),name:$("oFirst").value.trim()+" "+$("oLast").value.trim(),phone:$("oPhone").value.trim(),email,city:$("oCity").value.trim(),address:$("oAddress").value.trim(),postcode:$("oPostcode").value.trim(),items,total};try{const r=await fetch("/api/orders",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({...order,verifiedEmail})});const d=await r.json();if(!r.ok)throw Error(d.error||"");orders.push(order);SAFE_LS.setItem("sham-orders",JSON.stringify(orders));cart=[];saveCart();renderCart();renderHistory();$("orderMessage").textContent=tr("orderDone");toast(tr("orderDone"));$("checkoutForm").reset();verifiedEmail="";codeSent=false;setTimeout(()=>go("history"),900)}catch(err){$("orderMessage").textContent=err.message||"Қате орын алды."}});
+if(dark)setTheme();fillCheckout();applyLanguage();
+</script>
+</body>
+</html>
